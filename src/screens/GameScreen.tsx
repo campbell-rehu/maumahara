@@ -1,10 +1,13 @@
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
-import { RouteProp } from '@react-navigation/native';
+import { View, StyleSheet } from 'react-native';
+import { RouteProp, useNavigation } from '@react-navigation/native';
+import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types/navigation';
 import { COLORS } from '../constants/colors';
+import GameBoard from '../components/GameBoard';
 
 type GameScreenRouteProp = RouteProp<RootStackParamList, 'Game'>;
+type GameScreenNavigationProp = StackNavigationProp<RootStackParamList, 'Game'>;
 
 interface GameScreenProps {
   route: GameScreenRouteProp;
@@ -12,11 +15,18 @@ interface GameScreenProps {
 
 export default function GameScreen({ route }: GameScreenProps) {
   const { difficulty } = route.params;
+  const navigation = useNavigation<GameScreenNavigationProp>();
+
+  const handleGameComplete = (score: number, time: number, mistakes: number) => {
+    navigation.navigate('Celebration', { score, time, mistakes });
+  };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Game Screen</Text>
-      <Text style={styles.difficulty}>Difficulty: {difficulty}</Text>
+      <GameBoard 
+        difficulty={difficulty} 
+        onGameComplete={handleGameComplete}
+      />
     </View>
   );
 }
@@ -25,17 +35,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: COLORS.background,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  title: {
-    fontSize: 32,
-    fontWeight: 'bold',
-    color: COLORS.text,
-    marginBottom: 20,
-  },
-  difficulty: {
-    fontSize: 20,
-    color: COLORS.text,
   },
 });
