@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from 'react';
+import React, { useEffect, useCallback } from 'react';
 import {
   View,
   Text,
@@ -10,18 +10,14 @@ import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../constants/colors';
 import { ANIMALS, Animal } from '../constants/animals';
 import MemoryCard from './MemoryCard';
+import { useGameState, useCardMatching, useSoundEffects } from '../hooks';
 
 interface GameBoardProps {
   difficulty: 'easy' | 'medium' | 'hard';
   onGameComplete: (score: number, time: number, mistakes: number) => void;
 }
 
-interface Card {
-  id: string;
-  animal: Animal;
-  isFlipped: boolean;
-  isMatched: boolean;
-}
+// Card interface is now imported from hooks
 
 interface GridConfig {
   rows: number;
@@ -40,120 +36,69 @@ const { width, height } = Dimensions.get('window');
 
 export default function GameBoard({ difficulty, onGameComplete }: GameBoardProps) {
   const navigation = useNavigation();
-  const [cards, setCards] = useState<Card[]>([]);
-  const [flippedCards, setFlippedCards] = useState<string[]>([]);
-  const [matchedCards, setMatchedCards] = useState<string[]>([]);
-  const [mistakes, setMistakes] = useState(0);
-  const [timeElapsed, setTimeElapsed] = useState(0);
-  const [gameStarted, setGameStarted] = useState(false);
-  const [isProcessing, setIsProcessing] = useState(false);
-
   const gridConfig = GRID_CONFIGS[difficulty];
-
-  // Fisher-Yates shuffle algorithm
-  const shuffleArray = useCallback(<T,>(array: T[]): T[] => {
-    const shuffled = [...array];
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
-    }
-    return shuffled;
-  }, []);
+  
+  // Custom hooks
+  const { gameState, actions, derived } = useGameState();
+  const { handleCardPress, checkForMatch } = useCardMatching();
+  const { playSound } = useSoundEffects();
 
   // Initialize cards for the game
   const initializeCards = useCallback(() => {
-    const selectedAnimals = ANIMALS.slice(0, gridConfig.pairs);
-    const cardPairs: Card[] = [];
-
-    selectedAnimals.forEach((animal, index) => {
-      // Create first card of the pair
-      cardPairs.push({
-        id: `${animal.id}-1`,
-        animal,
-        isFlipped: false,
-        isMatched: false,
-      });
-
-      // Create second card of the pair
-      cardPairs.push({
-        id: `${animal.id}-2`,
-        animal,
-        isFlipped: false,
-        isMatched: false,
-      });
-    });
-
-    // Shuffle the cards
-    const shuffledCards = shuffleArray(cardPairs);
-    setCards(shuffledCards);
-    setFlippedCards([]);
-    setMatchedCards([]);
-    setMistakes(0);
-    setTimeElapsed(0);
-    setGameStarted(false);
-    setIsProcessing(false);
-  }, [gridConfig.pairs, shuffleArray]);
+    actions.initializeGame(ANIMALS, gridConfig);
+  }, [actions, gridConfig]);
 
   // Initialize cards when component mounts or difficulty changes
   useEffect(() => {
     initializeCards();
   }, [initializeCards]);
 
-  // Timer effect
-  useEffect(() => {
-    let interval: NodeJS.Timeout;
-    if (gameStarted && matchedCards.length < gridConfig.totalCards) {
-      interval = setInterval(() => {
-        setTimeElapsed((prev) => prev + 1);
-      }, 1000);
-    }
-    return () => clearInterval(interval);
-  }, [gameStarted, matchedCards.length, gridConfig.totalCards]);
+  // Timer is now handled by useGameState hook
 
   // Check for game completion
   useEffect(() => {
-    if (matchedCards.length === gridConfig.totalCards && matchedCards.length > 0) {
-      const score = Math.max(1000 - mistakes * 50 - timeElapsed * 2, 100);
+    if (gameState.gamePhase === 'completed') {
+      playSound('gameComplete');
       setTimeout(() => {
-        onGameComplete(score, timeElapsed, mistakes);
+        onGameComplete(derived.score, gameState.timeElapsed, gameState.mistakes);
       }, 1000);
     }
-  }, [matchedCards.length, gridConfig.totalCards, mistakes, timeElapsed, onGameComplete]);
+  }, [gameState.gamePhase, derived.score, gameState.timeElapsed, gameState.mistakes, onGameComplete, playSound]);
 
-  // Handle card press
-  const handleCardPress = useCallback((cardId: string) => {
-    if (isProcessing || flippedCards.includes(cardId) || matchedCards.includes(cardId)) {
+  // Handle card press with enhanced logic
+  const onCardPress = useCallback((cardId: string) => {
+    const canFlip = derived.canFlipCard(cardId);
+    
+    if (!canFlip) {
       return;
     }
 
-    if (!gameStarted) {
-      setGameStarted(true);
-    }
-
-    if (flippedCards.length === 0) {
-      setFlippedCards([cardId]);
-    } else if (flippedCards.length === 1) {
-      setFlippedCards([...flippedCards, cardId]);
-      setIsProcessing(true);
-
-      // Check for match after a delay
+    playSound('cardFlip');
+    actions.flipCard(cardId);
+    
+    // Check for match when second card is flipped
+    if (gameState.flippedCards.length === 1) {
+      actions.setProcessing(true);
+      
       setTimeout(() => {
-        const firstCard = cards.find(c => c.id === flippedCards[0]);
-        const secondCard = cards.find(c => c.id === cardId);
-
-        if (firstCard && secondCard && firstCard.animal.id === secondCard.animal.id) {
-          // Match found
-          setMatchedCards(prev => [...prev, firstCard.id, secondCard.id]);
+        const newFlippedCards = [...gameState.flippedCards, cardId];
+        const matchResult = checkForMatch(newFlippedCards, gameState.cards);
+        
+        if (matchResult.isMatch) {
+          playSound('match');
+          actions.addMatch(matchResult.matchedCardIds);
         } else {
-          // No match
-          setMistakes(prev => prev + 1);
+          playSound('mismatch');
+          actions.addMistake();
         }
-
-        setFlippedCards([]);
-        setIsProcessing(false);
+        
+        actions.setProcessing(false);
       }, 1000);
     }
-  }, [cards, flippedCards, matchedCards, isProcessing, gameStarted]);
+  }, [
+    derived, playSound, actions, gameState.flippedCards, 
+    gameState.cards, checkForMatch
+  ]);
 
   // Calculate card dimensions based on screen size
   const getCardDimensions = () => {
@@ -181,9 +126,9 @@ export default function GameBoard({ difficulty, onGameComplete }: GameBoardProps
   };
 
   // Render card
-  const renderCard = (card: Card) => {
-    const isFlipped = flippedCards.includes(card.id) || matchedCards.includes(card.id);
-    const isMatched = matchedCards.includes(card.id);
+  const renderCard = (card: any) => {
+    const isFlipped = gameState.flippedCards.includes(card.id) || gameState.matchedCards.includes(card.id);
+    const isMatched = gameState.matchedCards.includes(card.id);
     
     return (
       <MemoryCard
@@ -192,10 +137,10 @@ export default function GameBoard({ difficulty, onGameComplete }: GameBoardProps
         animal={card.animal}
         isFlipped={isFlipped}
         isMatched={isMatched}
-        onPress={() => handleCardPress(card.id)}
+        onPress={() => onCardPress(card.id)}
         cardWidth={cardDimensions.width}
         cardHeight={cardDimensions.height}
-        disabled={isProcessing}
+        disabled={gameState.isProcessing}
       />
     );
   };
@@ -204,16 +149,50 @@ export default function GameBoard({ difficulty, onGameComplete }: GameBoardProps
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <TouchableOpacity
-          style={styles.backButton}
-          onPress={() => navigation.goBack()}
-        >
-          <Text style={styles.backButtonText}>← Back</Text>
-        </TouchableOpacity>
+        <View style={styles.leftButtons}>
+          <TouchableOpacity
+            style={styles.backButton}
+            onPress={() => {
+              playSound('buttonPress');
+              navigation.goBack();
+            }}
+          >
+            <Text style={styles.backButtonText}>← Back</Text>
+          </TouchableOpacity>
+          
+          {gameState.gamePhase === 'playing' && (
+            <TouchableOpacity
+              style={[styles.backButton, { marginLeft: 8 }]}
+              onPress={() => {
+                playSound('buttonPress');
+                actions.pauseGame();
+              }}
+            >
+              <Text style={styles.backButtonText}>⏸️ Pause</Text>
+            </TouchableOpacity>
+          )}
+          
+          {gameState.gamePhase === 'paused' && (
+            <TouchableOpacity
+              style={[styles.backButton, { marginLeft: 8 }]}
+              onPress={() => {
+                playSound('buttonPress');
+                actions.resumeGame();
+              }}
+            >
+              <Text style={styles.backButtonText}>▶️ Resume</Text>
+            </TouchableOpacity>
+          )}
+        </View>
         
         <View style={styles.statsContainer}>
-          <Text style={styles.statsText}>Time: {formatTime(timeElapsed)}</Text>
-          <Text style={styles.statsText}>Mistakes: {mistakes}</Text>
+          <Text style={styles.statsText}>Time: {formatTime(gameState.timeElapsed)}</Text>
+          <Text style={styles.statsText}>Mistakes: {gameState.mistakes}</Text>
+          <Text style={[styles.statsText, { fontSize: 12, opacity: 0.7 }]}>
+            {gameState.gamePhase === 'paused' ? 'PAUSED' : 
+             gameState.gamePhase === 'completed' ? 'COMPLETED' : 
+             gameState.gamePhase === 'waiting' ? 'Tap to start' : 'Playing'}
+          </Text>
         </View>
       </View>
 
@@ -226,7 +205,7 @@ export default function GameBoard({ difficulty, onGameComplete }: GameBoardProps
             height: gridConfig.rows * cardDimensions.height + (gridConfig.rows - 1) * 10,
           }
         ]}>
-          {cards.map(renderCard)}
+          {gameState.cards.map(renderCard)}
         </View>
       </View>
 
@@ -251,6 +230,10 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     padding: 20,
     paddingTop: 60,
+  },
+  leftButtons: {
+    flexDirection: 'row',
+    alignItems: 'center',
   },
   backButton: {
     backgroundColor: COLORS.secondary,
