@@ -97,15 +97,16 @@ export default function GameBoard({ difficulty, onGameComplete }: GameBoardProps
 
   // Calculate card dimensions based on screen size
   const getCardDimensions = () => {
-    const availableWidth = width - 40; // 20px padding on each side
-    const availableHeight = height - 120; // Reduced space for simpler header
+    const availableWidth = width - 32; // 16px padding on each side
+    const availableHeight = height - 140; // Space for header
     
-    const cardWidth = (availableWidth - (gridConfig.cols - 1) * 10) / gridConfig.cols;
-    const cardHeight = (availableHeight - (gridConfig.rows - 1) * 10) / gridConfig.rows;
+    const cardSpacing = 12; // Space between cards
+    const cardWidth = (availableWidth - (gridConfig.cols - 1) * cardSpacing) / gridConfig.cols;
+    const cardHeight = (availableHeight - (gridConfig.rows - 1) * cardSpacing) / gridConfig.rows;
     
     // Ensure cards are not too small or too large
-    const minSize = 70;
-    const maxSize = 140;
+    const minSize = 85;
+    const maxSize = 160;
     const size = Math.min(Math.max(Math.min(cardWidth, cardHeight), minSize), maxSize);
     
     return { width: size, height: size };
@@ -164,8 +165,8 @@ export default function GameBoard({ difficulty, onGameComplete }: GameBoardProps
         <View style={[
           styles.grid,
           {
-            width: gridConfig.cols * cardDimensions.width + (gridConfig.cols - 1) * 10,
-            height: gridConfig.rows * cardDimensions.height + (gridConfig.rows - 1) * 10,
+            width: gridConfig.cols * cardDimensions.width + (gridConfig.cols - 1) * 12,
+            height: gridConfig.rows * cardDimensions.height + (gridConfig.rows - 1) * 12,
           }
         ]}>
           {gameState.cards.map(renderCard)}
@@ -218,6 +219,6 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     alignContent: 'space-between',
-    gap: 10,
+    gap: 12,
   },
 });

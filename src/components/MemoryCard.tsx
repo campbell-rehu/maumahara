@@ -160,8 +160,8 @@ export default function MemoryCard({
                 style={[
                   styles.animalImage,
                   {
-                    width: cardWidth * 0.6,
-                    height: cardHeight * 0.5,
+                    width: cardWidth * 0.75,
+                    height: cardHeight * 0.6,
                   },
                 ]}
                 resizeMode="contain"
@@ -174,7 +174,7 @@ export default function MemoryCard({
               <Text
                 style={[
                   styles.maoriText,
-                  { fontSize: Math.min(cardWidth * 0.12, 18) },
+                  { fontSize: Math.min(cardWidth * 0.14, 22) },
                 ]}
                 numberOfLines={1}
                 adjustsFontSizeToFit
@@ -186,7 +186,7 @@ export default function MemoryCard({
               <Text
                 style={[
                   styles.englishText,
-                  { fontSize: Math.min(cardWidth * 0.08, 12) },
+                  { fontSize: Math.min(cardWidth * 0.1, 16) },
                 ]}
                 numberOfLines={1}
                 adjustsFontSizeToFit
