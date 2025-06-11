@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useCallback } from 'react';
 import { View, StyleSheet } from 'react-native';
 import { RouteProp, useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -17,9 +17,9 @@ export default function GameScreen({ route }: GameScreenProps) {
   const { difficulty } = route.params;
   const navigation = useNavigation<GameScreenNavigationProp>();
 
-  const handleGameComplete = (score: number, time: number, mistakes: number) => {
+  const handleGameComplete = useCallback((score: number, time: number, mistakes: number) => {
     navigation.navigate('Celebration', { score, time, mistakes });
-  };
+  }, [navigation]);
 
   return (
     <View style={styles.container}>

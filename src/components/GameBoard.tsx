@@ -43,15 +43,10 @@ export default function GameBoard({ difficulty, onGameComplete }: GameBoardProps
   const { handleCardPress, checkForMatch } = useCardMatching();
   const { playSound } = useSoundEffects();
 
-  // Initialize cards for the game
-  const initializeCards = useCallback(() => {
-    actions.initializeGame(ANIMALS, gridConfig);
-  }, [actions, gridConfig]);
-
   // Initialize cards when component mounts or difficulty changes
   useEffect(() => {
-    initializeCards();
-  }, [initializeCards]);
+    actions.initializeGame(ANIMALS, gridConfig);
+  }, [difficulty]); // Only re-initialize when difficulty changes
 
   // Timer is now handled by useGameState hook
 
