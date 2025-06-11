@@ -58,9 +58,9 @@ describe('WelcomeScreen', () => {
     // Modal should now be visible
     await waitFor(() => {
       expect(getByText('Choose Difficulty')).toBeTruthy();
-      expect(getByText('Easy')).toBeTruthy();
-      expect(getByText('Medium')).toBeTruthy();
-      expect(getByText('Hard')).toBeTruthy();
+      expect(getByText('Māmā')).toBeTruthy(); // Māori text for Easy
+      expect(getByText('Rōpū')).toBeTruthy(); // Māori text for Medium
+      expect(getByText('Uaua')).toBeTruthy(); // Māori text for Hard
     });
   });
 
@@ -75,9 +75,9 @@ describe('WelcomeScreen', () => {
     const playButton = getByText('Tīmata | Start');
     fireEvent.press(playButton);
 
-    // Select easy difficulty
+    // Select easy difficulty using Māori text
     await waitFor(() => {
-      const easyButton = getByText('Easy');
+      const easyButton = getByText('Māmā');
       fireEvent.press(easyButton);
     });
 
@@ -96,9 +96,9 @@ describe('WelcomeScreen', () => {
     const playButton = getByText('Tīmata | Start');
     fireEvent.press(playButton);
 
-    // Select medium difficulty
+    // Select medium difficulty using Māori text
     await waitFor(() => {
-      const mediumButton = getByText('Medium');
+      const mediumButton = getByText('Rōpū');
       fireEvent.press(mediumButton);
     });
 
@@ -117,9 +117,9 @@ describe('WelcomeScreen', () => {
     const playButton = getByText('Tīmata | Start');
     fireEvent.press(playButton);
 
-    // Select hard difficulty
+    // Select hard difficulty using Māori text
     await waitFor(() => {
-      const hardButton = getByText('Hard');
+      const hardButton = getByText('Uaua');
       fireEvent.press(hardButton);
     });
 
@@ -138,9 +138,9 @@ describe('WelcomeScreen', () => {
     const playButton = getByText('Tīmata | Start');
     fireEvent.press(playButton);
 
-    // Press cancel
+    // Press cancel using bilingual text
     await waitFor(() => {
-      const cancelButton = getByText('Cancel');
+      const cancelButton = getByText('Whakakore | Cancel');
       fireEvent.press(cancelButton);
     });
 

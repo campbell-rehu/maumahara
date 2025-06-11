@@ -5,7 +5,6 @@ import {
   StyleSheet,
   TouchableOpacity,
   Dimensions,
-  Modal,
 } from 'react-native';
 import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
@@ -13,6 +12,7 @@ import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types/navigation';
 import { COLORS } from '../constants/colors';
 import KoruPattern from '../components/KoruPattern';
+import DifficultyModal from '../components/DifficultyModal';
 
 type WelcomeScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -60,49 +60,11 @@ export default function WelcomeScreen() {
         </TouchableOpacity>
       </View>
 
-      <Modal
+      <DifficultyModal
         visible={showDifficulty}
-        transparent
-        animationType="fade"
-        onRequestClose={() => setShowDifficulty(false)}
-      >
-        <View style={styles.modalOverlay}>
-          <View style={styles.modalContent}>
-            <Text style={styles.modalTitle}>Choose Difficulty</Text>
-            
-            <TouchableOpacity
-              style={[styles.difficultyButton, styles.easyButton]}
-              onPress={() => handleDifficultySelect('easy')}
-            >
-              <Text style={styles.difficultyText}>Easy</Text>
-              <Text style={styles.difficultySubtext}>2 × 3 cards</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.difficultyButton, styles.mediumButton]}
-              onPress={() => handleDifficultySelect('medium')}
-            >
-              <Text style={styles.difficultyText}>Medium</Text>
-              <Text style={styles.difficultySubtext}>4 × 4 cards</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={[styles.difficultyButton, styles.hardButton]}
-              onPress={() => handleDifficultySelect('hard')}
-            >
-              <Text style={styles.difficultyText}>Hard</Text>
-              <Text style={styles.difficultySubtext}>4 × 5 cards</Text>
-            </TouchableOpacity>
-
-            <TouchableOpacity
-              style={styles.cancelButton}
-              onPress={() => setShowDifficulty(false)}
-            >
-              <Text style={styles.cancelText}>Cancel</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </Modal>
+        onClose={() => setShowDifficulty(false)}
+        onSelectDifficulty={handleDifficultySelect}
+      />
     </LinearGradient>
   );
 }
@@ -166,60 +128,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     color: COLORS.textLight,
     letterSpacing: 0.5,
-  },
-  modalOverlay: {
-    flex: 1,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  modalContent: {
-    backgroundColor: COLORS.background,
-    borderRadius: 20,
-    padding: 30,
-    width: width * 0.85,
-    maxWidth: 400,
-    alignItems: 'center',
-  },
-  modalTitle: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: COLORS.text,
-    marginBottom: 30,
-  },
-  difficultyButton: {
-    width: '100%',
-    paddingVertical: 20,
-    borderRadius: 15,
-    marginBottom: 15,
-    alignItems: 'center',
-  },
-  easyButton: {
-    backgroundColor: COLORS.easy,
-  },
-  mediumButton: {
-    backgroundColor: COLORS.medium,
-  },
-  hardButton: {
-    backgroundColor: COLORS.hard,
-  },
-  difficultyText: {
-    fontSize: 22,
-    fontWeight: 'bold',
-    color: COLORS.text,
-  },
-  difficultySubtext: {
-    fontSize: 16,
-    color: COLORS.text,
-    opacity: 0.8,
-  },
-  cancelButton: {
-    marginTop: 10,
-    paddingVertical: 15,
-  },
-  cancelText: {
-    fontSize: 18,
-    color: COLORS.text,
-    opacity: 0.6,
   },
 });
