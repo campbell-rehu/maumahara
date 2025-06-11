@@ -46,7 +46,7 @@ const getImageSource = (imageName: string): ImageSourcePropType => {
     pukeko: require('../../assets/images/animals/pukeko.png'),
     sheep: require('../../assets/images/animals/sheep.png'),
     snail: require('../../assets/images/animals/snail.png'),
-    tūī: require('../../assets/images/animals/tūī.png'),
+    tui: require('../../assets/images/animals/tui.png'),
   };
   
   return imageMap[imageName] || imageMap.dog; // fallback to dog image
