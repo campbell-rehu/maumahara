@@ -5,11 +5,11 @@ import {
   StyleSheet,
   Dimensions,
   TouchableOpacity,
-  Pressable,
 } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import { COLORS } from '../constants/colors';
 import { ANIMALS, Animal } from '../constants/animals';
+import MemoryCard from './MemoryCard';
 
 interface GameBoardProps {
   difficulty: 'easy' | 'medium' | 'hard';
@@ -18,8 +18,7 @@ interface GameBoardProps {
 
 interface Card {
   id: string;
-  animalId: string;
-  type: 'english' | 'maori';
+  animal: Animal;
   isFlipped: boolean;
   isMatched: boolean;
 }
@@ -66,21 +65,19 @@ export default function GameBoard({ difficulty, onGameComplete }: GameBoardProps
     const selectedAnimals = ANIMALS.slice(0, gridConfig.pairs);
     const cardPairs: Card[] = [];
 
-    selectedAnimals.forEach((animal) => {
-      // Create English card
+    selectedAnimals.forEach((animal, index) => {
+      // Create first card of the pair
       cardPairs.push({
-        id: `${animal.id}-english`,
-        animalId: animal.id,
-        type: 'english',
+        id: `${animal.id}-1`,
+        animal,
         isFlipped: false,
         isMatched: false,
       });
 
-      // Create Māori card
+      // Create second card of the pair
       cardPairs.push({
-        id: `${animal.id}-maori`,
-        animalId: animal.id,
-        type: 'maori',
+        id: `${animal.id}-2`,
+        animal,
         isFlipped: false,
         isMatched: false,
       });
@@ -144,7 +141,7 @@ export default function GameBoard({ difficulty, onGameComplete }: GameBoardProps
         const firstCard = cards.find(c => c.id === flippedCards[0]);
         const secondCard = cards.find(c => c.id === cardId);
 
-        if (firstCard && secondCard && firstCard.animalId === secondCard.animalId) {
+        if (firstCard && secondCard && firstCard.animal.id === secondCard.animal.id) {
           // Match found
           setMatchedCards(prev => [...prev, firstCard.id, secondCard.id]);
         } else {
@@ -183,43 +180,23 @@ export default function GameBoard({ difficulty, onGameComplete }: GameBoardProps
     return `${mins}:${secs.toString().padStart(2, '0')}`;
   };
 
-  // Get card text
-  const getCardText = (card: Card) => {
-    const animal = ANIMALS.find(a => a.id === card.animalId);
-    if (!animal) return '';
-    return card.type === 'english' ? animal.english : animal.maori;
-  };
-
   // Render card
   const renderCard = (card: Card) => {
     const isFlipped = flippedCards.includes(card.id) || matchedCards.includes(card.id);
+    const isMatched = matchedCards.includes(card.id);
     
     return (
-      <Pressable
+      <MemoryCard
         key={card.id}
-        testID={`card-${card.id}`}
-        style={[
-          styles.card,
-          {
-            width: cardDimensions.width,
-            height: cardDimensions.height,
-            backgroundColor: isFlipped ? COLORS.cardFront : COLORS.cardBack,
-          },
-          matchedCards.includes(card.id) && styles.matchedCard,
-        ]}
+        cardId={card.id}
+        animal={card.animal}
+        isFlipped={isFlipped}
+        isMatched={isMatched}
         onPress={() => handleCardPress(card.id)}
+        cardWidth={cardDimensions.width}
+        cardHeight={cardDimensions.height}
         disabled={isProcessing}
-      >
-        <Text style={[
-          styles.cardText,
-          {
-            color: isFlipped ? COLORS.text : 'transparent',
-            fontSize: cardDimensions.width * 0.15,
-          }
-        ]}>
-          {isFlipped ? getCardText(card) : '?'}
-        </Text>
-      </Pressable>
+      />
     );
   };
 
@@ -305,27 +282,7 @@ const styles = StyleSheet.create({
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     alignContent: 'space-between',
-  },
-  card: {
-    borderRadius: 8,
-    justifyContent: 'center',
-    alignItems: 'center',
-    marginBottom: 10,
-    marginRight: 10,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.1,
-    shadowRadius: 4,
-    elevation: 3,
-  },
-  matchedCard: {
-    backgroundColor: COLORS.success,
-    opacity: 0.8,
-  },
-  cardText: {
-    fontWeight: 'bold',
-    textAlign: 'center',
-    flexWrap: 'wrap',
+    gap: 10,
   },
   difficultyContainer: {
     alignItems: 'center',
