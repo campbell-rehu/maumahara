@@ -15,7 +15,6 @@ import Animated, {
   runOnJS,
 } from 'react-native-reanimated';
 import { COLORS } from '../constants/colors';
-import KoruPattern from './KoruPattern';
 
 interface MemoryCardProps {
   cardId: string;
@@ -149,12 +148,7 @@ export default function MemoryCard({
     >
       <Animated.View style={[cardContainerStyle, { width: cardWidth, height: cardHeight }]}>
         {/* Card Back */}
-        <Animated.View style={[cardStyle, styles.cardBack, backSideStyle]}>
-          <KoruPattern color={COLORS.primary} opacity={0.15} />
-          <View style={styles.cardBackContent}>
-            <Text style={styles.cardBackTitle}>Maumahara</Text>
-          </View>
-        </Animated.View>
+        <Animated.View style={[cardStyle, styles.cardBack, backSideStyle]} />
 
         {/* Card Front */}
         <Animated.View style={[cardStyle, styles.cardFront, frontSideStyle]}>
@@ -228,17 +222,6 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.cardBack,
     justifyContent: 'center',
     alignItems: 'center',
-  },
-  cardBackContent: {
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  cardBackTitle: {
-    fontSize: 16,
-    fontWeight: 'bold',
-    color: COLORS.textLight,
-    opacity: 0.8,
-    textAlign: 'center',
   },
   cardFront: {
     backgroundColor: COLORS.cardFront,

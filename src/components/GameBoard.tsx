@@ -98,14 +98,14 @@ export default function GameBoard({ difficulty, onGameComplete }: GameBoardProps
   // Calculate card dimensions based on screen size
   const getCardDimensions = () => {
     const availableWidth = width - 40; // 20px padding on each side
-    const availableHeight = height - 200; // Space for header and other UI
+    const availableHeight = height - 120; // Reduced space for simpler header
     
     const cardWidth = (availableWidth - (gridConfig.cols - 1) * 10) / gridConfig.cols;
     const cardHeight = (availableHeight - (gridConfig.rows - 1) * 10) / gridConfig.rows;
     
     // Ensure cards are not too small or too large
-    const minSize = 60;
-    const maxSize = 120;
+    const minSize = 70;
+    const maxSize = 140;
     const size = Math.min(Math.max(Math.min(cardWidth, cardHeight), minSize), maxSize);
     
     return { width: size, height: size };
@@ -144,51 +144,19 @@ export default function GameBoard({ difficulty, onGameComplete }: GameBoardProps
     <View style={styles.container}>
       {/* Header */}
       <View style={styles.header}>
-        <View style={styles.leftButtons}>
-          <TouchableOpacity
-            style={styles.backButton}
-            onPress={() => {
-              playSound('buttonPress');
-              navigation.goBack();
-            }}
-          >
-            <Text style={styles.backButtonText}>← Back</Text>
-          </TouchableOpacity>
-          
-          {gameState.gamePhase === 'playing' && (
-            <TouchableOpacity
-              style={[styles.backButton, { marginLeft: 8 }]}
-              onPress={() => {
-                playSound('buttonPress');
-                actions.pauseGame();
-              }}
-            >
-              <Text style={styles.backButtonText}>⏸️ Pause</Text>
-            </TouchableOpacity>
-          )}
-          
-          {gameState.gamePhase === 'paused' && (
-            <TouchableOpacity
-              style={[styles.backButton, { marginLeft: 8 }]}
-              onPress={() => {
-                playSound('buttonPress');
-                actions.resumeGame();
-              }}
-            >
-              <Text style={styles.backButtonText}>▶️ Resume</Text>
-            </TouchableOpacity>
-          )}
-        </View>
+        <TouchableOpacity
+          style={styles.backButton}
+          onPress={() => {
+            playSound('buttonPress');
+            navigation.goBack();
+          }}
+        >
+          <Text style={styles.backButtonText}>‹</Text>
+        </TouchableOpacity>
         
-        <View style={styles.statsContainer}>
-          <Text style={styles.statsText}>Time: {formatTime(gameState.timeElapsed)}</Text>
-          <Text style={styles.statsText}>Mistakes: {gameState.mistakes}</Text>
-          <Text style={[styles.statsText, { fontSize: 12, opacity: 0.7 }]}>
-            {gameState.gamePhase === 'paused' ? 'PAUSED' : 
-             gameState.gamePhase === 'completed' ? 'COMPLETED' : 
-             gameState.gamePhase === 'waiting' ? 'Tap to start' : 'Playing'}
-          </Text>
-        </View>
+        <Text style={styles.headerTitle}>Maumahara</Text>
+        
+        <View style={styles.placeholder} />
       </View>
 
       {/* Game Board */}
@@ -204,12 +172,6 @@ export default function GameBoard({ difficulty, onGameComplete }: GameBoardProps
         </View>
       </View>
 
-      {/* Difficulty indicator */}
-      <View style={styles.difficultyContainer}>
-        <Text style={[styles.difficultyText, { color: COLORS[difficulty] }]}>
-          {difficulty.charAt(0).toUpperCase() + difficulty.slice(1)} Mode
-        </Text>
-      </View>
     </View>
   );
 }
@@ -223,32 +185,28 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 20,
+    paddingHorizontal: 20,
     paddingTop: 60,
-  },
-  leftButtons: {
-    flexDirection: 'row',
-    alignItems: 'center',
+    paddingBottom: 20,
   },
   backButton: {
-    backgroundColor: COLORS.secondary,
-    paddingHorizontal: 16,
-    paddingVertical: 8,
-    borderRadius: 8,
+    width: 40,
+    height: 40,
+    justifyContent: 'center',
+    alignItems: 'center',
   },
   backButtonText: {
-    color: COLORS.textLight,
-    fontSize: 16,
-    fontWeight: '600',
-  },
-  statsContainer: {
-    alignItems: 'flex-end',
-  },
-  statsText: {
-    fontSize: 16,
     color: COLORS.text,
+    fontSize: 32,
+    fontWeight: '300',
+  },
+  headerTitle: {
+    fontSize: 20,
     fontWeight: '600',
-    marginBottom: 4,
+    color: COLORS.text,
+  },
+  placeholder: {
+    width: 40,
   },
   gameBoard: {
     flex: 1,
@@ -261,13 +219,5 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignContent: 'space-between',
     gap: 10,
-  },
-  difficultyContainer: {
-    alignItems: 'center',
-    paddingVertical: 20,
-  },
-  difficultyText: {
-    fontSize: 18,
-    fontWeight: 'bold',
   },
 });
