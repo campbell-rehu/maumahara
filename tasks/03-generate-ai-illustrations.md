@@ -12,10 +12,10 @@ Create consistent, culturally appropriate AI-generated illustrations for all 10 
 4. Kau (Cow)
 5. Poaka (Pig)
 6. Hōiho (Horse)
-7. Kākā (Parrot)
-8. Kekeno (Seal)
+7. Pūkeko (Pūkeko bird)
+8. Kiwi (Kiwi bird)
 9. Tūī (Tui bird)
-10. Kererū (Wood pigeon)
+10. Pūrerehua (Butterfly)
 
 ## AI Generation Prompt Template
 ```

@@ -7,10 +7,12 @@ import {
   Dimensions,
   Modal,
 } from 'react-native';
+import { LinearGradient } from 'expo-linear-gradient';
 import { useNavigation } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
 import { RootStackParamList } from '../types/navigation';
 import { COLORS } from '../constants/colors';
+import KoruPattern from '../components/KoruPattern';
 
 type WelcomeScreenNavigationProp = StackNavigationProp<
   RootStackParamList,
@@ -29,22 +31,32 @@ export default function WelcomeScreen() {
   };
 
   return (
-    <View style={styles.container}>
-      <View style={styles.patternOverlay} />
+    <LinearGradient
+      colors={['#E6F3FF', '#F0E6FF']}
+      style={styles.container}
+      start={{ x: 0, y: 0 }}
+      end={{ x: 1, y: 1 }}
+    >
+      <KoruPattern color={COLORS.primary} opacity={0.08} />
       
       <View style={styles.content}>
-        <Text style={styles.greeting}>Kia ora!</Text>
-        <Text style={styles.subtitle}>Haere mai ki Maumahara</Text>
+        <Text style={styles.greeting}>Kia ora! Haere mai ki Maumahara</Text>
+        <Text style={styles.englishSubtitle}>Welcome to Memory</Text>
+        
+        <Text style={styles.title}>Maumahara</Text>
+        
         <Text style={styles.description}>
-          Learn animals in Te Reo Māori
+          Match animals with their Te Reo Māori names
         </Text>
 
         <TouchableOpacity
           style={styles.playButton}
           onPress={() => setShowDifficulty(true)}
           activeOpacity={0.8}
+          accessibilityLabel="Start game button"
+          accessibilityHint="Tap to select difficulty and start playing"
         >
-          <Text style={styles.playButtonText}>PLAY</Text>
+          <Text style={styles.playButtonText}>Tīmata | Start</Text>
         </TouchableOpacity>
       </View>
 
@@ -91,21 +103,19 @@ export default function WelcomeScreen() {
           </View>
         </View>
       </Modal>
-    </View>
+    </LinearGradient>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: COLORS.background,
   },
   patternOverlay: {
     position: 'absolute',
     width: width,
     height: height,
-    backgroundColor: COLORS.primary,
-    opacity: 0.1,
+    backgroundColor: 'transparent',
   },
   content: {
     flex: 1,
@@ -114,36 +124,48 @@ const styles = StyleSheet.create({
     paddingHorizontal: 20,
   },
   greeting: {
-    fontSize: 48,
+    fontSize: 28,
+    fontWeight: '600',
+    color: COLORS.primary,
+    marginBottom: 8,
+    textAlign: 'center',
+  },
+  englishSubtitle: {
+    fontSize: 20,
+    color: COLORS.text,
+    marginBottom: 40,
+    opacity: 0.8,
+  },
+  title: {
+    fontSize: 56,
     fontWeight: 'bold',
     color: COLORS.primary,
-    marginBottom: 10,
-  },
-  subtitle: {
-    fontSize: 24,
-    color: COLORS.text,
-    marginBottom: 20,
+    marginBottom: 16,
+    letterSpacing: 1,
   },
   description: {
     fontSize: 18,
     color: COLORS.text,
-    marginBottom: 50,
+    marginBottom: 60,
+    textAlign: 'center',
+    opacity: 0.9,
   },
   playButton: {
     backgroundColor: COLORS.accent,
-    paddingHorizontal: 60,
-    paddingVertical: 20,
-    borderRadius: 30,
-    elevation: 5,
+    paddingHorizontal: 80,
+    paddingVertical: 24,
+    borderRadius: 40,
+    elevation: 8,
     shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 5,
   },
   playButtonText: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
     color: COLORS.textLight,
+    letterSpacing: 0.5,
   },
   modalOverlay: {
     flex: 1,
