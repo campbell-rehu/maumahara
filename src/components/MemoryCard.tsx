@@ -160,8 +160,8 @@ export default function MemoryCard({
                 style={[
                   styles.animalImage,
                   {
-                    width: cardWidth * 0.75,
-                    height: cardHeight * 0.6,
+                    width: cardWidth * 0.8,
+                    height: cardHeight * 0.65,
                   },
                 ]}
                 resizeMode="contain"
@@ -227,7 +227,7 @@ const styles = StyleSheet.create({
     backgroundColor: COLORS.cardFront,
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 8,
+    padding: 6,
   },
   cardFrontContent: {
     flex: 1,
@@ -239,7 +239,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 4,
+    marginTop: 2,
   },
   animalImage: {
     borderRadius: 8,
@@ -247,8 +247,8 @@ const styles = StyleSheet.create({
   textContainer: {
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 4,
-    minHeight: 40,
+    paddingVertical: 2,
+    minHeight: 35,
   },
   maoriText: {
     fontWeight: 'bold',
