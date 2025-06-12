@@ -104,22 +104,23 @@ export default function GameBoard({ difficulty, onGameComplete }: GameBoardProps
     const cardWidth = (availableWidth - (gridConfig.cols - 1) * cardSpacing) / gridConfig.cols;
     const cardHeight = (availableHeight - (gridConfig.rows - 1) * cardSpacing) / gridConfig.rows;
     
-    // For medium (4x4) and hard (4x5), prioritize width-based sizing
-    // For easy (2x3), use the smaller of width/height
-    let size;
-    if (difficulty === 'easy') {
-      size = Math.min(cardWidth, cardHeight);
-    } else {
-      // For denser grids, use width as primary constraint
-      size = cardWidth;
-    }
+    // Allow cards to be rectangular, constrain both dimensions separately
+    const minWidth = 80;
+    const maxWidth = 120;
+    const minHeight = 100;
+    const maxHeight = 200;
     
-    // Ensure cards are not too small or too large
-    const minSize = 80;
-    const maxSize = 180;
-    size = Math.min(Math.max(size, minSize), maxSize);
+    const finalWidth = Math.min(Math.max(cardWidth, minWidth), maxWidth);
+    const finalHeight = Math.min(Math.max(cardHeight, minHeight), maxHeight);
     
-    return { width: size, height: size };
+    console.log(`Debug - Difficulty: ${difficulty}`);
+    console.log(`Debug - Screen: ${width}x${height}`);
+    console.log(`Debug - Available: ${availableWidth}x${availableHeight}`);
+    console.log(`Debug - Grid: ${gridConfig.cols}x${gridConfig.rows}`);
+    console.log(`Debug - Calculated card: ${cardWidth}x${cardHeight}`);
+    console.log(`Debug - Final size: ${finalWidth}x${finalHeight}`);
+    
+    return { width: finalWidth, height: finalHeight };
   };
 
   const cardDimensions = getCardDimensions();
