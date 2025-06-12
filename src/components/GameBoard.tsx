@@ -98,7 +98,7 @@ export default function GameBoard({ difficulty, onGameComplete }: GameBoardProps
   // Calculate card dimensions based on screen size
   const getCardDimensions = () => {
     const availableWidth = width - 24; // 12px padding on each side
-    const availableHeight = height - 100; // Less space reserved for header
+    const availableHeight = height - 140; // Space for header + top padding
     
     const cardSpacing = 10; // Space between cards
     const cardWidth = (availableWidth - (gridConfig.cols - 1) * cardSpacing) / gridConfig.cols;
@@ -191,8 +191,8 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     alignItems: 'center',
     paddingHorizontal: 20,
-    paddingTop: 60,
-    paddingBottom: 20,
+    paddingTop: 50,
+    paddingBottom: 10,
   },
   backButton: {
     width: 40,
@@ -215,8 +215,9 @@ const styles = StyleSheet.create({
   },
   gameBoard: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     alignItems: 'center',
+    paddingTop: 20,
   },
   grid: {
     flexDirection: 'row',
