@@ -113,13 +113,6 @@ export default function GameBoard({ difficulty, onGameComplete }: GameBoardProps
     const finalWidth = Math.min(Math.max(cardWidth, minWidth), maxWidth);
     const finalHeight = Math.min(Math.max(cardHeight, minHeight), maxHeight);
     
-    console.log(`Debug - Difficulty: ${difficulty}`);
-    console.log(`Debug - Screen: ${width}x${height}`);
-    console.log(`Debug - Available: ${availableWidth}x${availableHeight}`);
-    console.log(`Debug - Grid: ${gridConfig.cols}x${gridConfig.rows}`);
-    console.log(`Debug - Calculated card: ${cardWidth}x${cardHeight}`);
-    console.log(`Debug - Final size: ${finalWidth}x${finalHeight}`);
-    
     return { width: finalWidth, height: finalHeight };
   };
 
