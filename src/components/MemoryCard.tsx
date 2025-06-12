@@ -14,6 +14,7 @@ import Animated, {
   interpolate,
   runOnJS,
 } from 'react-native-reanimated';
+import { LinearGradient } from 'expo-linear-gradient';
 import { COLORS } from '../constants/colors';
 
 interface MemoryCardProps {
@@ -30,6 +31,7 @@ interface MemoryCardProps {
   cardWidth: number;
   cardHeight: number;
   disabled?: boolean;
+  selectionOrder?: 'first' | 'second' | null;
 }
 
 // Function to get the image source from assets
@@ -60,6 +62,7 @@ export default function MemoryCard({
   cardWidth,
   cardHeight,
   disabled = false,
+  selectionOrder = null,
 }: MemoryCardProps) {
   const flipAnimation = useSharedValue(0);
   const scaleAnimation = useSharedValue(1);
@@ -67,7 +70,7 @@ export default function MemoryCard({
   // Handle flip animation
   useEffect(() => {
     flipAnimation.value = withTiming(isFlipped ? 1 : 0, {
-      duration: 500,
+      duration: 600,
     });
   }, [isFlipped, flipAnimation]);
 
@@ -97,26 +100,41 @@ export default function MemoryCard({
   // Animated styles for the front side
   const frontSideStyle = useAnimatedStyle(() => {
     const rotateY = interpolate(flipAnimation.value, [0, 1], [180, 0]);
-    const opacity = interpolate(flipAnimation.value, [0.5, 1], [0, 1]);
     
     return {
       transform: [{ rotateY: `${rotateY}deg` }],
-      opacity,
       backfaceVisibility: 'hidden',
+      position: 'absolute',
+      width: '100%',
+      height: '100%',
     };
   });
 
   // Animated styles for the back side
   const backSideStyle = useAnimatedStyle(() => {
     const rotateY = interpolate(flipAnimation.value, [0, 1], [0, 180]);
-    const opacity = interpolate(flipAnimation.value, [0, 0.5], [1, 0]);
     
     return {
       transform: [{ rotateY: `${rotateY}deg` }],
-      opacity,
       backfaceVisibility: 'hidden',
+      position: 'absolute',
+      width: '100%',
+      height: '100%',
     };
   });
+
+  const getBorderStyle = () => {
+    if (isMatched) {
+      return {}; // No border needed, gradient will be applied
+    }
+    if (isFlipped && selectionOrder === 'first') {
+      return { borderColor: COLORS.firstSelection, borderWidth: 4 };
+    }
+    if (isFlipped && selectionOrder === 'second') {
+      return { borderColor: COLORS.secondSelection, borderWidth: 4 };
+    }
+    return {};
+  };
 
   const cardStyle = [
     styles.card,
@@ -124,8 +142,72 @@ export default function MemoryCard({
       width: cardWidth,
       height: cardHeight,
     },
-    isMatched && styles.matchedCard,
+    getBorderStyle(),
   ];
+
+  const renderCard = () => (
+    <Animated.View style={[cardContainerStyle, { width: cardWidth, height: cardHeight, position: 'relative' }]}>
+      {/* Card Back */}
+      <Animated.View style={[cardStyle, styles.cardBack, backSideStyle]}>
+        <Text style={styles.questionMark}>?</Text>
+      </Animated.View>
+
+      {/* Card Front */}
+      <Animated.View style={[cardStyle, styles.cardFront, frontSideStyle]}>
+        <View style={styles.cardFrontContent}>
+          {/* Animal Image - now takes up most of the card */}
+          <View style={styles.imageContainer}>
+            <Image
+              source={getImageSource(animal.image)}
+              style={[
+                styles.animalImage,
+                {
+                  width: cardWidth * 0.9,
+                  height: cardHeight * 0.9,
+                },
+              ]}
+              resizeMode="contain"
+            />
+          </View>
+        </View>
+
+      </Animated.View>
+    </Animated.View>
+  );
+
+  if (isMatched) {
+    return (
+      <Pressable
+        onPress={handlePress}
+        disabled={disabled}
+        testID={`card-${cardId}`}
+        accessibilityRole="button"
+        accessibilityLabel={`Memory card for ${animal.english}, ${animal.maori}`}
+        accessibilityHint="Card is matched"
+        accessibilityState={{
+          selected: isFlipped,
+          disabled: disabled,
+        }}
+      >
+        <LinearGradient
+          colors={COLORS.rainbow}
+          start={{ x: 0, y: 0 }}
+          end={{ x: 1, y: 1 }}
+          style={[
+            styles.gradientBorder,
+            {
+              width: cardWidth,
+              height: cardHeight,
+            },
+          ]}
+        >
+          <View style={styles.gradientInner}>
+            {renderCard()}
+          </View>
+        </LinearGradient>
+      </Pressable>
+    );
+  }
 
   return (
     <Pressable
@@ -136,9 +218,7 @@ export default function MemoryCard({
       accessibilityLabel={`Memory card for ${animal.english}, ${animal.maori}`}
       accessibilityHint={
         isFlipped
-          ? isMatched
-            ? 'Card is matched'
-            : 'Card is face up, showing the animal'
+          ? 'Card is face up, showing the animal'
           : 'Card is face down, tap to flip'
       }
       accessibilityState={{
@@ -146,64 +226,7 @@ export default function MemoryCard({
         disabled: disabled,
       }}
     >
-      <Animated.View style={[cardContainerStyle, { width: cardWidth, height: cardHeight }]}>
-        {/* Card Back */}
-        <Animated.View style={[cardStyle, styles.cardBack, backSideStyle]} />
-
-        {/* Card Front */}
-        <Animated.View style={[cardStyle, styles.cardFront, frontSideStyle]}>
-          <View style={styles.cardFrontContent}>
-            {/* Animal Image */}
-            <View style={styles.imageContainer}>
-              <Image
-                source={getImageSource(animal.image)}
-                style={[
-                  styles.animalImage,
-                  {
-                    width: cardWidth * 0.8,
-                    height: cardHeight * 0.65,
-                  },
-                ]}
-                resizeMode="contain"
-              />
-            </View>
-
-            {/* Text Content */}
-            <View style={styles.textContainer}>
-              {/* Te Reo Māori name (larger, top) */}
-              <Text
-                style={[
-                  styles.maoriText,
-                  { fontSize: Math.min(cardWidth * 0.14, 22) },
-                ]}
-                numberOfLines={1}
-                adjustsFontSizeToFit
-              >
-                {animal.maori}
-              </Text>
-
-              {/* English name (smaller, bottom) */}
-              <Text
-                style={[
-                  styles.englishText,
-                  { fontSize: Math.min(cardWidth * 0.1, 16) },
-                ]}
-                numberOfLines={1}
-                adjustsFontSizeToFit
-              >
-                {animal.english}
-              </Text>
-            </View>
-          </View>
-
-          {/* Matched State Overlay */}
-          {isMatched && (
-            <View style={styles.matchedOverlay}>
-              <Text style={styles.checkmark}>✓</Text>
-            </View>
-          )}
-        </Animated.View>
-      </Animated.View>
+      {renderCard()}
     </Pressable>
   );
 }
@@ -216,7 +239,6 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.15,
     shadowRadius: 8,
     elevation: 5,
-    position: 'absolute',
   },
   cardBack: {
     backgroundColor: COLORS.cardBack,
@@ -225,13 +247,13 @@ const styles = StyleSheet.create({
   },
   cardFront: {
     backgroundColor: COLORS.cardFront,
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     padding: 6,
   },
   cardFrontContent: {
     flex: 1,
-    justifyContent: 'space-between',
+    justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
   },
@@ -239,49 +261,26 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    marginTop: 2,
   },
   animalImage: {
     borderRadius: 8,
   },
-  textContainer: {
-    alignItems: 'center',
-    justifyContent: 'center',
-    paddingVertical: 2,
-    minHeight: 35,
-  },
-  maoriText: {
-    fontWeight: 'bold',
-    color: COLORS.primary,
-    textAlign: 'center',
-    lineHeight: 20,
-  },
-  englishText: {
-    fontWeight: '500',
-    color: COLORS.text,
-    textAlign: 'center',
-    opacity: 0.8,
-    marginTop: 2,
-    lineHeight: 14,
-  },
-  matchedCard: {
-    borderWidth: 3,
-    borderColor: COLORS.success,
-  },
-  matchedOverlay: {
-    position: 'absolute',
-    top: 4,
-    right: 4,
-    backgroundColor: COLORS.success,
+  gradientBorder: {
     borderRadius: 12,
-    width: 24,
-    height: 24,
+    padding: 4,
     justifyContent: 'center',
     alignItems: 'center',
   },
-  checkmark: {
-    color: COLORS.textLight,
-    fontSize: 14,
+  gradientInner: {
+    flex: 1,
+    width: '100%',
+    borderRadius: 8,
+    overflow: 'hidden',
+  },
+  questionMark: {
+    fontSize: 48,
     fontWeight: 'bold',
+    color: COLORS.textLight,
+    textAlign: 'center',
   },
 });

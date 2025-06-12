@@ -19,6 +19,8 @@ export interface GameState {
   gamePhase: GamePhase;
   isProcessing: boolean;
   moveCount: number;
+  firstSelection: string | null;
+  secondSelection: string | null;
 }
 
 export interface GameConfig {
@@ -57,6 +59,8 @@ const INITIAL_GAME_STATE: GameState = {
   gamePhase: 'waiting',
   isProcessing: false,
   moveCount: 0,
+  firstSelection: null,
+  secondSelection: null,
 };
 
 // Fisher-Yates shuffle algorithm
@@ -156,11 +160,26 @@ export function useGameState(): UseGameStateReturn {
           ? prev.moveCount + 1
           : prev.moveCount;
 
+        // Update selection tracking
+        let firstSelection = prev.firstSelection;
+        let secondSelection = prev.secondSelection;
+        
+        if (!prev.flippedCards.includes(cardId)) {
+          if (prev.flippedCards.length === 0) {
+            firstSelection = cardId;
+            secondSelection = null;
+          } else if (prev.flippedCards.length === 1) {
+            secondSelection = cardId;
+          }
+        }
+
         return {
           ...prev,
           flippedCards: newFlippedCards,
           gamePhase: newGamePhase,
           moveCount: newMoveCount,
+          firstSelection,
+          secondSelection,
         };
       });
     }, []),
@@ -193,6 +212,8 @@ export function useGameState(): UseGameStateReturn {
         ...prev,
         matchedCards: [...prev.matchedCards, ...cardIds],
         flippedCards: [],
+        firstSelection: null,
+        secondSelection: null,
       }));
     }, []),
 
@@ -201,6 +222,8 @@ export function useGameState(): UseGameStateReturn {
         ...prev,
         mistakes: prev.mistakes + 1,
         flippedCards: [],
+        firstSelection: null,
+        secondSelection: null,
       }));
     }, []),
 

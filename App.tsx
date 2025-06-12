@@ -36,10 +36,7 @@ export default function App() {
           <Stack.Screen 
             name="Game" 
             component={GameScreen}
-            options={{ 
-              title: 'Maumahara',
-              headerBackTitle: 'Back',
-            }}
+            options={{ headerShown: false }}
           />
           <Stack.Screen 
             name="Celebration" 
