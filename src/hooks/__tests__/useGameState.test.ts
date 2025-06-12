@@ -18,7 +18,9 @@ describe('useGameState', () => {
   });
 
   afterEach(() => {
-    jest.runOnlyPendingTimers();
+    act(() => {
+      jest.runOnlyPendingTimers();
+    });
   });
 
   describe('Initial State', () => {

@@ -14,6 +14,9 @@ jest.mock('react-native-reanimated', () => {
   return Reanimated;
 });
 
+// Mock KoruPattern component (no longer used but may be referenced)
+jest.mock('../KoruPattern', () => 'KoruPattern');
+
 // Mock the image assets
 jest.mock('../../../assets/images/animals/dog.png', () => 'dog.png');
 jest.mock('../../../assets/images/animals/cat.png', () => 'cat.png');
@@ -25,7 +28,7 @@ jest.mock('../../../assets/images/animals/butterfly.png', () => 'butterfly.png')
 jest.mock('../../../assets/images/animals/kiwi.png', () => 'kiwi.png');
 jest.mock('../../../assets/images/animals/pukeko.png', () => 'pukeko.png');
 jest.mock('../../../assets/images/animals/snail.png', () => 'snail.png');
-jest.mock('../../../assets/images/animals/tūī.png', () => 'tūī.png');
+jest.mock('../../../assets/images/animals/tui.png', () => 'tui.png');
 
 const mockAnimal: Animal = {
   id: '1',
@@ -58,9 +61,10 @@ describe('MemoryCard', () => {
   });
 
   it('shows card back when not flipped', () => {
-    const { getByText } = render(<MemoryCard {...defaultProps} />);
+    const { getByTestId } = render(<MemoryCard {...defaultProps} />);
     
-    expect(getByText('Maumahara')).toBeDefined();
+    // Card back is solid color, no text content to check
+    expect(getByTestId('card-test-card-1')).toBeDefined();
   });
 
   it('shows animal names when flipped', () => {
@@ -188,14 +192,14 @@ describe('MemoryCard', () => {
   });
 
   it('maintains proper card state transitions', async () => {
-    const { rerender, getByText } = render(
+    const { rerender, getByText, getByTestId } = render(
       <MemoryCard {...defaultProps} />
     );
     
-    // Initially shows card back
-    expect(getByText('Maumahara')).toBeDefined();
+    // Initially shows card back (solid color, no text)
+    expect(getByTestId('card-test-card-1')).toBeDefined();
     
-    // When flipped, shows front
+    // When flipped, shows front with animal names
     rerender(<MemoryCard {...defaultProps} isFlipped={true} />);
     
     await waitFor(() => {
