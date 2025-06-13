@@ -139,86 +139,24 @@ export default function MemoryCard({
   const cardStyle = [
     styles.card,
     {
-      width: cardWidth,
-      height: cardHeight,
+      width: cardWidth - 8,
+      height: cardHeight - 8,
     },
     getBorderStyle(),
   ];
 
-  const renderCard = () => (
-    <Animated.View style={[cardContainerStyle, { width: cardWidth, height: cardHeight, position: 'relative' }]}>
-      {/* Card Back */}
-      <Animated.View style={[cardStyle, styles.cardBack, backSideStyle]}>
-        <Text style={styles.questionMark}>?</Text>
-      </Animated.View>
-
-      {/* Card Front */}
-      <Animated.View style={[cardStyle, styles.cardFront, frontSideStyle]}>
-        <View style={styles.cardFrontContent}>
-          {/* Animal Image - now takes up most of the card */}
-          <View style={styles.imageContainer}>
-            <Image
-              source={getImageSource(animal.image)}
-              style={[
-                styles.animalImage,
-                {
-                  width: cardWidth * 0.9,
-                  height: cardHeight * 0.9,
-                },
-              ]}
-              resizeMode="contain"
-            />
-          </View>
-        </View>
-
-      </Animated.View>
-    </Animated.View>
-  );
-
-  if (isMatched) {
-    return (
-      <Pressable
-        onPress={handlePress}
-        disabled={disabled}
-        testID={`card-${cardId}`}
-        accessibilityRole="button"
-        accessibilityLabel={`Memory card for ${animal.english}, ${animal.maori}`}
-        accessibilityHint="Card is matched"
-        accessibilityState={{
-          selected: isFlipped,
-          disabled: disabled,
-        }}
-      >
-        <LinearGradient
-          colors={COLORS.rainbow}
-          start={{ x: 0, y: 0 }}
-          end={{ x: 1, y: 1 }}
-          style={[
-            styles.gradientBorder,
-            {
-              width: cardWidth,
-              height: cardHeight,
-            },
-          ]}
-        >
-          <View style={styles.gradientInner}>
-            {renderCard()}
-          </View>
-        </LinearGradient>
-      </Pressable>
-    );
-  }
-
   return (
     <Pressable
       onPress={handlePress}
-      disabled={disabled}
+      disabled={disabled || isMatched}
       testID={`card-${cardId}`}
       accessibilityRole="button"
       accessibilityLabel={`Memory card for ${animal.english}, ${animal.maori}`}
       accessibilityHint={
         isFlipped
-          ? 'Card is face up, showing the animal'
+          ? isMatched
+            ? 'Card is matched'
+            : 'Card is face up, showing the animal'
           : 'Card is face down, tap to flip'
       }
       accessibilityState={{
@@ -226,7 +164,53 @@ export default function MemoryCard({
         disabled: disabled,
       }}
     >
-      {renderCard()}
+      {/* Always render gradient border but make it transparent when not matched */}
+      <LinearGradient
+        colors={isMatched ? COLORS.rainbow : ['transparent', 'transparent']}
+        start={{ x: 0, y: 0 }}
+        end={{ x: 1, y: 1 }}
+        style={[
+          styles.gradientBorder,
+          {
+            width: cardWidth,
+            height: cardHeight,
+          },
+        ]}
+      >
+        <Animated.View style={[
+          cardContainerStyle, 
+          styles.gradientInner,
+          {
+            width: cardWidth - 8,
+            height: cardHeight - 8,
+          }
+        ]}>
+          {/* Card Back */}
+          <Animated.View style={[cardStyle, styles.cardBack, backSideStyle]}>
+            <Text style={styles.questionMark}>?</Text>
+          </Animated.View>
+
+          {/* Card Front */}
+          <Animated.View style={[cardStyle, styles.cardFront, frontSideStyle]}>
+            <View style={styles.cardFrontContent}>
+              {/* Animal Image - now takes up most of the card */}
+              <View style={styles.imageContainer}>
+                <Image
+                  source={getImageSource(animal.image)}
+                  style={[
+                    styles.animalImage,
+                    {
+                      width: (cardWidth - 8) * 0.9,
+                      height: (cardHeight - 8) * 0.9,
+                    },
+                  ]}
+                  resizeMode="contain"
+                />
+              </View>
+            </View>
+          </Animated.View>
+        </Animated.View>
+      </LinearGradient>
     </Pressable>
   );
 }

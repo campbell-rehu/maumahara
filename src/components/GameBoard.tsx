@@ -1,4 +1,4 @@
-import React, { useEffect, useCallback } from "react";
+import React, { useEffect, useCallback, useState } from "react";
 import {
   View,
   Text,
@@ -41,6 +41,9 @@ export default function GameBoard({
 }: GameBoardProps) {
   const navigation = useNavigation();
   const gridConfig = GRID_CONFIGS[difficulty];
+  
+  // State to track when to show "Ōrite!" message
+  const [showMatchMessage, setShowMatchMessage] = useState(false);
 
   // Custom hooks
   const { gameState, actions, derived } = useGameState();
@@ -97,7 +100,13 @@ export default function GameBoard({
 
           if (matchResult.isMatch) {
             playSound("match");
+            setShowMatchMessage(true);
             actions.addMatch(matchResult.matchedCardIds);
+            
+            // Hide match message after 2 seconds
+            setTimeout(() => {
+              setShowMatchMessage(false);
+            }, 2000);
           } else {
             playSound("mismatch");
             actions.addMistake();
@@ -224,7 +233,7 @@ export default function GameBoard({
         rightWord={getMaoriWords().rightWord}
         leftBorderColor={COLORS.firstSelection}
         rightBorderColor={COLORS.secondSelection}
-        isMatched={areSelectionsMatched()}
+        isMatched={showMatchMessage}
       />
 
       {/* Game Board */}
