@@ -31,7 +31,7 @@ interface DifficultyModalProps {
 const DIFFICULTY_LEVELS: DifficultyLevel[] = [
   {
     name: 'Easy',
-    maoriName: 'Māmā',
+    maoriName: 'Easy',
     gridSize: { rows: 2, cols: 3 },
     pairs: 3,
     animals: ['Kurī', 'Ngeru', 'Hipi'],
@@ -40,7 +40,7 @@ const DIFFICULTY_LEVELS: DifficultyLevel[] = [
   },
   {
     name: 'Medium',
-    maoriName: 'Rōpū',
+    maoriName: 'Medium',
     gridSize: { rows: 4, cols: 4 },
     pairs: 8,
     animals: ['Kurī', 'Ngeru', 'Hipi', 'Kau', 'Poaka', 'Hōiho', 'Kākā', 'Kekeno'],
@@ -49,7 +49,7 @@ const DIFFICULTY_LEVELS: DifficultyLevel[] = [
   },
   {
     name: 'Hard',
-    maoriName: 'Uaua',
+    maoriName: 'Hard',
     gridSize: { rows: 4, cols: 5 },
     pairs: 10,
     animals: ['Kurī', 'Ngeru', 'Hipi', 'Kau', 'Poaka', 'Hōiho', 'Kākā', 'Kekeno', 'Tūī', 'Kererū'],
