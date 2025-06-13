@@ -58,31 +58,6 @@ const DIFFICULTY_LEVELS: DifficultyLevel[] = [
   },
 ];
 
-const GridIcon: React.FC<{ rows: number; cols: number; color: string }> = ({ rows, cols, color }) => {
-  const gridItems = [];
-  for (let i = 0; i < rows * cols; i++) {
-    gridItems.push(
-      <View
-        key={i}
-        style={[
-          styles.gridItem,
-          {
-            backgroundColor: 'rgba(255, 255, 255, 0.3)',
-            borderRadius: 3,
-            width: (80 - (cols - 1) * 3) / cols,
-            height: (60 - (rows - 1) * 3) / rows,
-          },
-        ]}
-      />
-    );
-  }
-
-  return (
-    <View style={[styles.gridContainer, { width: 80, height: 60 }]}>
-      {gridItems}
-    </View>
-  );
-};
 
 export default function DifficultyModal({
   visible,
@@ -156,16 +131,7 @@ export default function DifficultyModal({
               accessibilityHint={`Tap to start ${level.name.toLowerCase()} game with ${level.pairs} pairs`}
             >
               <View style={styles.buttonContent}>
-                <View style={styles.buttonLeft}>
-                  <GridIcon
-                    rows={level.gridSize.rows}
-                    cols={level.gridSize.cols}
-                    color={COLORS.textLight}
-                  />
-                </View>
-                <View style={styles.buttonCenter}>
-                  <Text style={styles.difficultyText}>{level.name}</Text>
-                </View>
+                <Text style={styles.difficultyText}>{level.name}</Text>
               </View>
             </TouchableOpacity>
           ))}
@@ -224,33 +190,16 @@ const styles = StyleSheet.create({
     shadowRadius: 4,
   },
   buttonContent: {
-    flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'center',
-    paddingVertical: 20,
+    paddingVertical: 24,
     paddingHorizontal: 20,
-  },
-  buttonLeft: {
-    marginRight: 16,
-  },
-  buttonCenter: {
-    alignItems: 'center',
   },
   difficultyText: {
     fontSize: 22,
     fontWeight: 'bold',
     color: COLORS.text,
     marginBottom: 2,
-  },
-  gridContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
-    justifyContent: 'space-between',
-    alignContent: 'space-between',
-    padding: 2,
-  },
-  gridItem: {
-    margin: 1,
   },
   cancelButton: {
     marginTop: 16,
