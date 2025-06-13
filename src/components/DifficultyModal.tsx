@@ -67,9 +67,10 @@ const GridIcon: React.FC<{ rows: number; cols: number; color: string }> = ({ row
         style={[
           styles.gridItem,
           {
-            backgroundColor: color,
-            width: (120 - (cols - 1) * 4) / cols,
-            height: (80 - (rows - 1) * 4) / rows,
+            backgroundColor: 'rgba(255, 255, 255, 0.3)',
+            borderRadius: 3,
+            width: (80 - (cols - 1) * 3) / cols,
+            height: (60 - (rows - 1) * 3) / rows,
           },
         ]}
       />
@@ -77,7 +78,7 @@ const GridIcon: React.FC<{ rows: number; cols: number; color: string }> = ({ row
   }
 
   return (
-    <View style={[styles.gridContainer, { width: 120, height: 80 }]}>
+    <View style={[styles.gridContainer, { width: 80, height: 60 }]}>
       {gridItems}
     </View>
   );
@@ -143,8 +144,7 @@ export default function DifficultyModal({
             },
           ]}
         >
-          <Text style={styles.modalTitle}>Kōwhiri te Uaua</Text>
-          <Text style={styles.modalSubtitle}>Choose Difficulty</Text>
+          <Text style={styles.modalTitle}>Choose Difficulty</Text>
 
           {DIFFICULTY_LEVELS.map((level, index) => (
             <TouchableOpacity
@@ -164,13 +164,7 @@ export default function DifficultyModal({
                   />
                 </View>
                 <View style={styles.buttonCenter}>
-                  <Text style={styles.difficultyText}>{level.maoriName}</Text>
-                  <Text style={styles.difficultyEnglish}>{level.name}</Text>
-                  <Text style={styles.difficultyDescription}>{level.description}</Text>
-                </View>
-                <View style={styles.buttonRight}>
-                  <Text style={styles.pairCount}>{level.pairs}</Text>
-                  <Text style={styles.pairLabel}>pairs</Text>
+                  <Text style={styles.difficultyText}>{level.name}</Text>
                 </View>
               </View>
             </TouchableOpacity>
@@ -183,7 +177,7 @@ export default function DifficultyModal({
             accessibilityLabel="Cancel"
             accessibilityHint="Close difficulty selection and return to welcome screen"
           >
-            <Text style={styles.cancelText}>Whakakore | Cancel</Text>
+            <Text style={styles.cancelText}>Cancel</Text>
           </TouchableOpacity>
         </Animated.View>
       </Animated.View>
@@ -216,13 +210,6 @@ const styles = StyleSheet.create({
     fontSize: 28,
     fontWeight: 'bold',
     color: COLORS.primary,
-    marginBottom: 4,
-    textAlign: 'center',
-  },
-  modalSubtitle: {
-    fontSize: 18,
-    color: COLORS.text,
-    opacity: 0.8,
     marginBottom: 32,
     textAlign: 'center',
   },
@@ -239,6 +226,7 @@ const styles = StyleSheet.create({
   buttonContent: {
     flexDirection: 'row',
     alignItems: 'center',
+    justifyContent: 'center',
     paddingVertical: 20,
     paddingHorizontal: 20,
   },
@@ -246,12 +234,7 @@ const styles = StyleSheet.create({
     marginRight: 16,
   },
   buttonCenter: {
-    flex: 1,
     alignItems: 'center',
-  },
-  buttonRight: {
-    alignItems: 'center',
-    marginLeft: 16,
   },
   difficultyText: {
     fontSize: 22,
@@ -259,38 +242,14 @@ const styles = StyleSheet.create({
     color: COLORS.text,
     marginBottom: 2,
   },
-  difficultyEnglish: {
-    fontSize: 18,
-    color: COLORS.text,
-    opacity: 0.9,
-    marginBottom: 4,
-  },
-  difficultyDescription: {
-    fontSize: 14,
-    color: COLORS.text,
-    opacity: 0.7,
-    textAlign: 'center',
-  },
-  pairCount: {
-    fontSize: 28,
-    fontWeight: 'bold',
-    color: COLORS.text,
-  },
-  pairLabel: {
-    fontSize: 12,
-    color: COLORS.text,
-    opacity: 0.7,
-  },
   gridContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-between',
     alignContent: 'space-between',
-    padding: 4,
+    padding: 2,
   },
   gridItem: {
-    borderRadius: 2,
-    opacity: 0.8,
     margin: 1,
   },
   cancelButton: {

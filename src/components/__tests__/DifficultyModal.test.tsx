@@ -58,15 +58,11 @@ describe('DifficultyModal', () => {
   it('renders correctly when visible', () => {
     const { getByText } = render(<DifficultyModal {...defaultProps} />);
 
-    expect(getByText('Kōwhiri te Uaua')).toBeTruthy();
     expect(getByText('Choose Difficulty')).toBeTruthy();
-    expect(getByText('Māmā')).toBeTruthy();
     expect(getByText('Easy')).toBeTruthy();
-    expect(getByText('Rōpū')).toBeTruthy();
     expect(getByText('Medium')).toBeTruthy();
-    expect(getByText('Uaua')).toBeTruthy();
     expect(getByText('Hard')).toBeTruthy();
-    expect(getByText('Whakakore | Cancel')).toBeTruthy();
+    expect(getByText('Cancel')).toBeTruthy();
   });
 
   it('does not render when not visible', () => {
@@ -74,29 +70,22 @@ describe('DifficultyModal', () => {
       <DifficultyModal {...defaultProps} visible={false} />
     );
 
-    expect(queryByText('Kōwhiri te Uaua')).toBeFalsy();
+    expect(queryByText('Choose Difficulty')).toBeFalsy();
   });
 
   it('displays correct difficulty information', () => {
     const { getByText } = render(<DifficultyModal {...defaultProps} />);
 
-    // Easy difficulty
-    expect(getByText('3 pairs • Perfect for beginners')).toBeTruthy();
-    expect(getByText('3')).toBeTruthy();
-
-    // Medium difficulty
-    expect(getByText('8 pairs • Good challenge')).toBeTruthy();
-    expect(getByText('8')).toBeTruthy();
-
-    // Hard difficulty
-    expect(getByText('10 pairs • Expert level')).toBeTruthy();
-    expect(getByText('10')).toBeTruthy();
+    // All difficulty levels should be displayed
+    expect(getByText('Easy')).toBeTruthy();
+    expect(getByText('Medium')).toBeTruthy();
+    expect(getByText('Hard')).toBeTruthy();
   });
 
   it('calls onSelectDifficulty with correct difficulty when easy is pressed', () => {
     const { getByText } = render(<DifficultyModal {...defaultProps} />);
 
-    fireEvent.press(getByText('Māmā'));
+    fireEvent.press(getByText('Easy'));
 
     expect(mockOnSelectDifficulty).toHaveBeenCalledWith('easy');
     expect(mockOnSelectDifficulty).toHaveBeenCalledTimes(1);
@@ -105,7 +94,7 @@ describe('DifficultyModal', () => {
   it('calls onSelectDifficulty with correct difficulty when medium is pressed', () => {
     const { getByText } = render(<DifficultyModal {...defaultProps} />);
 
-    fireEvent.press(getByText('Rōpū'));
+    fireEvent.press(getByText('Medium'));
 
     expect(mockOnSelectDifficulty).toHaveBeenCalledWith('medium');
     expect(mockOnSelectDifficulty).toHaveBeenCalledTimes(1);
@@ -114,7 +103,7 @@ describe('DifficultyModal', () => {
   it('calls onSelectDifficulty with correct difficulty when hard is pressed', () => {
     const { getByText } = render(<DifficultyModal {...defaultProps} />);
 
-    fireEvent.press(getByText('Uaua'));
+    fireEvent.press(getByText('Hard'));
 
     expect(mockOnSelectDifficulty).toHaveBeenCalledWith('hard');
     expect(mockOnSelectDifficulty).toHaveBeenCalledTimes(1);
@@ -123,7 +112,7 @@ describe('DifficultyModal', () => {
   it('calls onClose when cancel button is pressed', () => {
     const { getByText } = render(<DifficultyModal {...defaultProps} />);
 
-    fireEvent.press(getByText('Whakakore | Cancel'));
+    fireEvent.press(getByText('Cancel'));
 
     expect(mockOnClose).toHaveBeenCalledTimes(1);
   });
@@ -150,37 +139,37 @@ describe('DifficultyModal', () => {
     const { rerender, queryByText } = render(<DifficultyModal {...defaultProps} visible={false} />);
 
     // Should not render when not visible
-    expect(queryByText('Kōwhiri te Uaua')).toBeFalsy();
+    expect(queryByText('Choose Difficulty')).toBeFalsy();
 
     // Should render when visible
     rerender(<DifficultyModal {...defaultProps} visible={true} />);
-    expect(queryByText('Kōwhiri te Uaua')).toBeTruthy();
+    expect(queryByText('Choose Difficulty')).toBeTruthy();
   });
 
   it('handles modal close correctly', () => {
     const { getByText } = render(<DifficultyModal {...defaultProps} />);
     
     // Test the cancel button functionality
-    fireEvent.press(getByText('Whakakore | Cancel'));
+    fireEvent.press(getByText('Cancel'));
     
     expect(mockOnClose).toHaveBeenCalledTimes(1);
   });
 
-  it('contains Te Reo Māori difficulty names', () => {
+  it('uses English difficulty names', () => {
     const { getByText } = render(<DifficultyModal {...defaultProps} />);
 
-    expect(getByText('Māmā')).toBeTruthy(); // Māori for Easy
-    expect(getByText('Rōpū')).toBeTruthy(); // Māori for Medium  
-    expect(getByText('Uaua')).toBeTruthy(); // Māori for Hard
+    expect(getByText('Easy')).toBeTruthy();
+    expect(getByText('Medium')).toBeTruthy();
+    expect(getByText('Hard')).toBeTruthy();
   });
 
   it('displays grid visualizations for each difficulty', () => {
     const { getByText } = render(<DifficultyModal {...defaultProps} />);
 
     // Check that all difficulty buttons are rendered (grid visualizations are inside these)
-    expect(getByText('Māmā')).toBeTruthy();
-    expect(getByText('Rōpū')).toBeTruthy();
-    expect(getByText('Uaua')).toBeTruthy();
+    expect(getByText('Easy')).toBeTruthy();
+    expect(getByText('Medium')).toBeTruthy();
+    expect(getByText('Hard')).toBeTruthy();
 
     // The grid icons are rendered as View components, so we can't test them directly
     // but we can ensure the buttons that contain them are present
