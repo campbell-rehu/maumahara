@@ -13,5 +13,5 @@ export const COLORS = {
   hard: '#FF6347', // Tomato
   firstSelection: '#DC143C', // Crimson Red
   secondSelection: '#FFD700', // Gold
-  rainbow: ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3'], // Rainbow colors
+  rainbow: ['#FF0000', '#FF7F00', '#FFFF00', '#00FF00', '#0000FF', '#4B0082', '#9400D3'] as const, // Rainbow colors
 };
