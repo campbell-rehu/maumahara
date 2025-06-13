@@ -40,9 +40,6 @@ export default function WelcomeScreen() {
       <KoruPattern color={COLORS.primary} opacity={0.08} />
       
       <View style={styles.content}>
-        <Text style={styles.greeting}>Kia ora! Haere mai ki Maumahara</Text>
-        <Text style={styles.englishSubtitle}>Welcome to Memory</Text>
-        
         <Text style={styles.title}>Maumahara</Text>
         
         <Text style={styles.description}>
@@ -56,7 +53,7 @@ export default function WelcomeScreen() {
           accessibilityLabel="Start game button"
           accessibilityHint="Tap to select difficulty and start playing"
         >
-          <Text style={styles.playButtonText}>Tīmata | Start</Text>
+          <Text style={styles.playButtonText}>Start</Text>
         </TouchableOpacity>
       </View>
 
@@ -84,19 +81,6 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     paddingHorizontal: 20,
-  },
-  greeting: {
-    fontSize: 28,
-    fontWeight: '600',
-    color: COLORS.primary,
-    marginBottom: 8,
-    textAlign: 'center',
-  },
-  englishSubtitle: {
-    fontSize: 20,
-    color: COLORS.text,
-    marginBottom: 40,
-    opacity: 0.8,
   },
   title: {
     fontSize: 56,

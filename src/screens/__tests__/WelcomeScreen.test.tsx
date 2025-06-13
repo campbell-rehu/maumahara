@@ -27,10 +27,6 @@ describe('WelcomeScreen', () => {
       </NavigationContainer>
     );
 
-    // Check for cultural greeting
-    expect(getByText('Kia ora! Haere mai ki Maumahara')).toBeTruthy();
-    expect(getByText('Welcome to Memory')).toBeTruthy();
-    
     // Check for title
     expect(getByText('Maumahara')).toBeTruthy();
     
@@ -38,7 +34,7 @@ describe('WelcomeScreen', () => {
     expect(getByText('Match animals with their Te Reo Māori names')).toBeTruthy();
     
     // Check for play button
-    expect(getByText('Tīmata | Start')).toBeTruthy();
+    expect(getByText('Start')).toBeTruthy();
   });
 
   it('opens difficulty modal when play button is pressed', async () => {
@@ -52,15 +48,15 @@ describe('WelcomeScreen', () => {
     expect(queryByText('Choose Difficulty')).toBeNull();
 
     // Press play button
-    const playButton = getByText('Tīmata | Start');
+    const playButton = getByText('Start');
     fireEvent.press(playButton);
 
     // Modal should now be visible
     await waitFor(() => {
       expect(getByText('Choose Difficulty')).toBeTruthy();
-      expect(getByText('Māmā')).toBeTruthy(); // Māori text for Easy
-      expect(getByText('Rōpū')).toBeTruthy(); // Māori text for Medium
-      expect(getByText('Uaua')).toBeTruthy(); // Māori text for Hard
+      expect(getByText('Easy')).toBeTruthy();
+      expect(getByText('Medium')).toBeTruthy();
+      expect(getByText('Hard')).toBeTruthy();
     });
   });
 
@@ -72,12 +68,12 @@ describe('WelcomeScreen', () => {
     );
 
     // Open modal
-    const playButton = getByText('Tīmata | Start');
+    const playButton = getByText('Start');
     fireEvent.press(playButton);
 
-    // Select easy difficulty using Māori text
+    // Select easy difficulty
     await waitFor(() => {
-      const easyButton = getByText('Māmā');
+      const easyButton = getByText('Easy');
       fireEvent.press(easyButton);
     });
 
@@ -93,12 +89,12 @@ describe('WelcomeScreen', () => {
     );
 
     // Open modal
-    const playButton = getByText('Tīmata | Start');
+    const playButton = getByText('Start');
     fireEvent.press(playButton);
 
-    // Select medium difficulty using Māori text
+    // Select medium difficulty
     await waitFor(() => {
-      const mediumButton = getByText('Rōpū');
+      const mediumButton = getByText('Medium');
       fireEvent.press(mediumButton);
     });
 
@@ -114,12 +110,12 @@ describe('WelcomeScreen', () => {
     );
 
     // Open modal
-    const playButton = getByText('Tīmata | Start');
+    const playButton = getByText('Start');
     fireEvent.press(playButton);
 
-    // Select hard difficulty using Māori text
+    // Select hard difficulty
     await waitFor(() => {
-      const hardButton = getByText('Uaua');
+      const hardButton = getByText('Hard');
       fireEvent.press(hardButton);
     });
 
@@ -135,12 +131,12 @@ describe('WelcomeScreen', () => {
     );
 
     // Open modal
-    const playButton = getByText('Tīmata | Start');
+    const playButton = getByText('Start');
     fireEvent.press(playButton);
 
-    // Press cancel using bilingual text
+    // Press cancel
     await waitFor(() => {
-      const cancelButton = getByText('Whakakore | Cancel');
+      const cancelButton = getByText('Cancel');
       fireEvent.press(cancelButton);
     });
 
