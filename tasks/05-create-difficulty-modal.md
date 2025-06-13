@@ -1,4 +1,4 @@
-# Task 05: Create DifficultyModal component
+# Task 05: Create DifficultyModal component ✅ COMPLETED
 
 ## Priority: High
 
