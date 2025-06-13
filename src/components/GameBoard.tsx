@@ -30,7 +30,7 @@ interface GridConfig {
 const GRID_CONFIGS: Record<string, GridConfig> = {
   easy: { rows: 2, cols: 3, totalCards: 6, pairs: 3 },
   medium: { rows: 4, cols: 4, totalCards: 16, pairs: 8 },
-  hard: { rows: 4, cols: 5, totalCards: 20, pairs: 10 },
+  hard: { rows: 5, cols: 4, totalCards: 20, pairs: 10 },
 };
 
 const { width, height } = Dimensions.get("window");
@@ -119,8 +119,8 @@ export default function GameBoard({
 
   // Calculate card dimensions based on screen size
   const getCardDimensions = () => {
-    const availableWidth = width - 24; // 12px padding on each side
-    const availableHeight = height - 140; // Space for header + top padding
+    const availableWidth = width - 40; // 20px padding on each side
+    const availableHeight = height - 220; // Space for header + word display + margins
 
     const cardSpacing = 10; // Space between cards
     const cardWidth =
@@ -128,14 +128,18 @@ export default function GameBoard({
     const cardHeight =
       (availableHeight - (gridConfig.rows - 1) * cardSpacing) / gridConfig.rows;
 
-    // Make cards more square by using similar constraints for both dimensions
-    const minSize = 80;
-    const maxSize = 130;
+    // Ensure cards fit within screen bounds
+    const minSize = 75;
+    const maxSize = 110;
+    
+    // Calculate final dimensions ensuring they fit
+    const finalWidth = Math.min(cardWidth, maxSize);
+    const finalHeight = Math.min(cardHeight, maxSize);
 
-    const finalWidth = Math.min(Math.max(cardWidth, minSize), maxSize);
-    const finalHeight = Math.min(Math.max(cardHeight, minSize), maxSize);
-
-    return { width: finalWidth, height: finalHeight };
+    // Keep cards reasonably square by using the smaller dimension
+    const size = Math.max(Math.min(finalWidth, finalHeight), minSize);
+    
+    return { width: size, height: size };
   };
 
   const cardDimensions = getCardDimensions();
