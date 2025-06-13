@@ -1,0 +1,74 @@
+name: Expo Build
+
+on:
+  push:
+    branches: [ main, master ]
+  pull_request:
+    branches: [ main, master ]
+  workflow_dispatch:
+
+jobs:
+  expo-build:
+    runs-on: self-hosted
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+      
+    - name: Setup Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        cache: 'npm'
+        
+    - name: Install dependencies
+      run: npm ci
+      
+    - name: Setup Expo CLI
+      run: |
+        if ! npx expo --version >/dev/null 2>&1; then
+          npm install -g @expo/cli
+        fi
+        
+    - name: Expo Doctor Check
+      run: npx expo doctor
+      
+    - name: Expo Prebuild (iOS)
+      run: |
+        if [[ "$RUNNER_OS" == "macOS" ]]; then
+          npx expo prebuild --platform ios --clean
+        else
+          echo "Skipping iOS prebuild on non-macOS runner"
+        fi
+        
+    - name: Expo Prebuild (Android)
+      run: npx expo prebuild --platform android --clean
+      
+    - name: Build for Web
+      run: npx expo export --platform web
+      
+    - name: Upload Web Build
+      if: success()
+      uses: actions/upload-artifact@v4
+      with:
+        name: web-build
+        path: dist/
+        retention-days: 14
+        
+    - name: Upload iOS Build Artifacts
+      if: success() && runner.os == 'macOS'
+      uses: actions/upload-artifact@v4
+      with:
+        name: ios-prebuild
+        path: ios/
+        retention-days: 7
+        if-no-files-found: ignore
+        
+    - name: Upload Android Build Artifacts
+      if: success()
+      uses: actions/upload-artifact@v4
+      with:
+        name: android-prebuild
+        path: android/
+        retention-days: 7
+        if-no-files-found: ignore
