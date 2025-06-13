@@ -23,7 +23,7 @@ export default function MaoriWordDisplay({
     return (
       <View style={styles.container}>
         <LinearGradient
-          colors={COLORS.rainbow.map((color) => color as ColorValue)}
+          colors={COLORS.rainbow}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={styles.matchedGradientBorder}

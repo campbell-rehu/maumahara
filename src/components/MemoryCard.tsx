@@ -168,7 +168,7 @@ export default function MemoryCard({
       >
         {/* Always render gradient border but make it transparent when not matched */}
         <LinearGradient
-          colors={isMatched ? COLORS.rainbow : ['transparent', 'transparent']}
+          colors={isMatched ? COLORS.rainbow : ['transparent', 'transparent'] as string[]}
           start={{ x: 0, y: 0 }}
           end={{ x: 1, y: 1 }}
           style={[

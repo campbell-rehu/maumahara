@@ -116,7 +116,7 @@ describe('useSoundEffects', () => {
       const initialPreloadSounds = result.current.preloadSounds;
       const initialSetSoundEnabled = result.current.setSoundEnabled;
       
-      rerender();
+      rerender({});
       
       expect(result.current.playSound).toBe(initialPlaySound);
       expect(result.current.preloadSounds).toBe(initialPreloadSounds);
