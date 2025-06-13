@@ -29,11 +29,11 @@ interface DifficultyLevel {
 ```
 
 ## Acceptance Criteria
-- [ ] Modal appears smoothly after Play button press
-- [ ] Three difficulty options clearly presented
-- [ ] Visual feedback on button press
-- [ ] Modal dismisses and navigates to game with selected difficulty
-- [ ] Difficulty level passed correctly to GameScreen
+- [x] ~~Modal appears smoothly after Play button press~~
+- [x] ~~Three difficulty options clearly presented~~
+- [x] ~~Visual feedback on button press~~
+- [x] ~~Modal dismisses and navigates to game with selected difficulty~~
+- [x] ~~Difficulty level passed correctly to GameScreen~~
 
 ## Visual Design
 - Easy: Green theme, friendly appearance

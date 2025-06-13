@@ -39,4 +39,4 @@ yarn-error.*
 # Claude Code settings
 .claude/
 .claude
-.env
+logs

@@ -40,13 +40,13 @@ interface MemoryCardProps {
 - Scale feedback on touch
 
 ## Acceptance Criteria
-- [ ] Card displays both face down and face up states
-- [ ] Flip animation is smooth at 60fps
-- [ ] Text is readable and properly positioned
-- [ ] Animal images display correctly
-- [ ] Touch feedback provides immediate response
-- [ ] Matched state is visually distinct
+- [x] ~~Card displays both face down and face up states~~
+- [x] ~~Flip animation is smooth at 60fps~~
+- [x] ~~Text is readable and properly positioned~~
+- [x] ~~Animal images display correctly~~
+- [x] ~~Touch feedback provides immediate response~~
+- [x] ~~Matched state is visually distinct~~
 
 ## Accessibility
-- [ ] Card content readable by VoiceOver
-- [ ] Proper accessibility hints for state
+- [x] ~~Card content readable by VoiceOver~~
+- [x] ~~Proper accessibility hints for state~~

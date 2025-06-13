@@ -2,6 +2,8 @@
 
 An iOS memory match game that teaches Te Reo Māori animal names to children (ages 5-12) through engaging card-matching gameplay.
 
+![Maumahara Game Demo](./gameplay-demo.gif)
+
 ## About
 
 Maumahara (meaning "remember" in Te Reo Māori) pairs English animal names with their Te Reo Māori translations in a fun, educational memory game. Children learn while playing through three difficulty levels with beautiful AI-generated animal illustrations.
@@ -72,18 +74,19 @@ src/
 
 ## Animals Included
 
-The game features 10 animals with their Te Reo Māori translations:
+The game features 11 animals with their Te Reo Māori translations:
 
 - Dog (Kurī)
 - Cat (Ngeru)
-- Bird (Manu)
-- Fish (Ika)
 - Horse (Hōiho)
 - Sheep (Hipi)
 - Cow (Kau)
 - Pig (Poaka)
-- Chicken (Heihei)
-- Whale (Tohorā)
+- Kiwi (Kiwi)
+- Pukeko (Pūkeko)
+- Tui (Tūī)
+- Butterfly (Pēpepe)
+- Snail (Pupu)
 
 ## Development Status
 
@@ -92,21 +95,26 @@ The game features 10 animals with their Te Reo Māori translations:
 - Project structure and navigation
 - Basic screens implemented
 
-🚧 **Phase 2**: Core Game Implementation (In Progress)
-- Welcome screen with difficulty selection
-- Game board component (coming soon)
-- Memory card component (coming soon)
-- Matching logic (coming soon)
+✅ **Phase 2**: Core Game Implementation (COMPLETED)
+- Welcome screen with Māori greeting and cultural design
+- Difficulty modal with three levels (Māmā, Rōpū, Uaua)
+- Game board component with responsive grid layouts
+- Memory card component with 3D flip animations
+- Complete matching logic and game state management
+- Score tracking with timer and mistake counter
+- "Ōrite!" celebration with rainbow borders
 
-📋 **Phase 3**: Enhancement & Polish (Planned)
-- Flip animations
-- Touch feedback
-- Performance optimization
+🚧 **Phase 3**: Enhancement & Polish (In Progress)
+- Touch feedback and animations ✅
+- Error boundaries for better stability ✅
+- Performance optimization ✅
+- Sound effects implementation (hook ready)
 
-🎯 **Phase 4**: App Store Preparation (Planned)
+📋 **Phase 4**: App Store Preparation (Planned)
 - App icon and launch screen
-- Accessibility features
+- Accessibility features ✅
 - Device testing
+- App Store metadata and screenshots
 
 ## Cultural Considerations
 

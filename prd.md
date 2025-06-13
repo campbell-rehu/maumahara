@@ -192,13 +192,13 @@ Previous 3 animals plus:
 4. Kau (Cow) / Cow
 5. Poaka (Pig) / Pig
 6. Hōiho (Horse) / Horse
-7. Kākā (Parrot) / Parrot
-8. Kekeno (Seal) / Seal
+7. Pūkeko (Pūkeko bird) / Pūkeko
+8. Kiwi (Kiwi bird) / Kiwi
 
 **Hard Level (4x5 = 10 pairs):**
 Previous 8 animals plus:
 9. Tūī (Tui bird) / Tui
-10. Kererū (Wood pigeon) / Wood pigeon
+10. Pūrerehua (Butterfly) / Butterfly
 
 ### Card Design Layout
 - **Primary Focus:** Large animal illustration (75% of card space)

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useMemo } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation, RouteProp } from '@react-navigation/native';
 import { StackNavigationProp } from '@react-navigation/stack';
@@ -15,9 +15,23 @@ interface CelebrationScreenProps {
   route: CelebrationScreenRouteProp;
 }
 
+// Celebratory Māori phrases with their meanings
+const CELEBRATION_PHRASES = [
+  'Ka pai!',           // Good!/Well done!
+  'Ka mau te wehi!',   // Amazing!/Fantastic!
+  'Tino pai!',         // Very good!
+  'Ka pai rawa!',      // Really good!
+  'Me he tē!',         // Like a boss!
+];
+
 export default function CelebrationScreen({ route }: CelebrationScreenProps) {
   const navigation = useNavigation<CelebrationScreenNavigationProp>();
-  const { score, time, mistakes } = route.params;
+
+  // Select a random celebratory phrase each time the screen loads
+  const celebrationPhrase = useMemo(() => {
+    const randomIndex = Math.floor(Math.random() * CELEBRATION_PHRASES.length);
+    return CELEBRATION_PHRASES[randomIndex];
+  }, []);
 
   const handlePlayAgain = () => {
     navigation.navigate('Welcome');
@@ -25,14 +39,8 @@ export default function CelebrationScreen({ route }: CelebrationScreenProps) {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Ka pai!</Text>
+      <Text style={styles.title}>{celebrationPhrase}</Text>
       <Text style={styles.subtitle}>Well done!</Text>
-
-      <View style={styles.statsContainer}>
-        <Text style={styles.statText}>Score: {score}</Text>
-        <Text style={styles.statText}>Time: {time}s</Text>
-        <Text style={styles.statText}>Mistakes: {mistakes}</Text>
-      </View>
 
       <TouchableOpacity
         style={styles.playAgainButton}
@@ -62,23 +70,7 @@ const styles = StyleSheet.create({
   subtitle: {
     fontSize: 24,
     color: COLORS.text,
-    marginBottom: 40,
-  },
-  statsContainer: {
-    backgroundColor: COLORS.cardFront,
-    padding: 30,
-    borderRadius: 20,
-    marginBottom: 40,
-    elevation: 3,
-    shadowColor: '#000',
-    shadowOffset: { width: 0, height: 2 },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-  },
-  statText: {
-    fontSize: 20,
-    color: COLORS.text,
-    marginBottom: 10,
+    marginBottom: 80,
   },
   playAgainButton: {
     backgroundColor: COLORS.accent,
