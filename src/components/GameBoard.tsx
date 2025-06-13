@@ -3,7 +3,6 @@ import {
   View,
   Text,
   StyleSheet,
-  Dimensions,
   TouchableOpacity,
 } from "react-native";
 import { useNavigation } from "@react-navigation/native";
@@ -12,6 +11,7 @@ import { ANIMALS, Animal } from "../constants/animals";
 import MemoryCard from "./MemoryCard";
 import MaoriWordDisplay from "./MaoriWordDisplay";
 import { useGameState, useCardMatching, useSoundEffects } from "../hooks";
+import { GRID_CONFIGS, calculateCardDimensions, GridConfig } from "../utils/gridUtils";
 
 interface GameBoardProps {
   difficulty: "easy" | "medium" | "hard";
@@ -19,21 +19,6 @@ interface GameBoardProps {
 }
 
 // Card interface is now imported from hooks
-
-interface GridConfig {
-  rows: number;
-  cols: number;
-  totalCards: number;
-  pairs: number;
-}
-
-const GRID_CONFIGS: Record<string, GridConfig> = {
-  easy: { rows: 2, cols: 3, totalCards: 6, pairs: 3 },
-  medium: { rows: 4, cols: 4, totalCards: 16, pairs: 8 },
-  hard: { rows: 5, cols: 4, totalCards: 20, pairs: 10 },
-};
-
-const { width, height } = Dimensions.get("window");
 
 export default function GameBoard({
   difficulty,
@@ -126,32 +111,8 @@ export default function GameBoard({
     ],
   );
 
-  // Calculate card dimensions based on screen size
-  const getCardDimensions = () => {
-    const availableWidth = width - 40; // 20px padding on each side
-    const availableHeight = height - 220; // Space for header + word display + margins
-
-    const cardSpacing = 10; // Space between cards
-    const cardWidth =
-      (availableWidth - (gridConfig.cols - 1) * cardSpacing) / gridConfig.cols;
-    const cardHeight =
-      (availableHeight - (gridConfig.rows - 1) * cardSpacing) / gridConfig.rows;
-
-    // Ensure cards fit within screen bounds
-    const minSize = 75;
-    const maxSize = 110;
-    
-    // Calculate final dimensions ensuring they fit
-    const finalWidth = Math.min(cardWidth, maxSize);
-    const finalHeight = Math.min(cardHeight, maxSize);
-
-    // Keep cards reasonably square by using the smaller dimension
-    const size = Math.max(Math.min(finalWidth, finalHeight), minSize);
-    
-    return { width: size, height: size };
-  };
-
-  const cardDimensions = getCardDimensions();
+  // Calculate card dimensions using utility function
+  const cardDimensions = calculateCardDimensions(gridConfig);
 
   // Get Māori words for display
   const getMaoriWords = () => {
