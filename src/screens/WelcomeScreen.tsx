@@ -27,7 +27,10 @@ export default function WelcomeScreen() {
 
   const handleDifficultySelect = (difficulty: 'easy' | 'medium' | 'hard') => {
     setShowDifficulty(false);
-    navigation.navigate('Game', { difficulty });
+    // Delay navigation to allow modal fade-out animation to complete (250ms + small buffer)
+    setTimeout(() => {
+      navigation.navigate('Game', { difficulty });
+    }, 300);
   };
 
   return (
@@ -43,7 +46,7 @@ export default function WelcomeScreen() {
         <Text style={styles.title}>Maumahara</Text>
         
         <Text style={styles.description}>
-          Match animals with their Te Reo Māori names
+          Te Reo Māori Memory Match Game
         </Text>
 
         <TouchableOpacity

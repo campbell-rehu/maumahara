@@ -86,12 +86,12 @@ export default function DifficultyModal({
       Animated.parallel([
         Animated.timing(fadeAnim, {
           toValue: 0,
-          duration: 200,
+          duration: 250,
           useNativeDriver: true,
         }),
         Animated.timing(scaleAnim, {
           toValue: 0.8,
-          duration: 200,
+          duration: 250,
           useNativeDriver: true,
         }),
       ]).start();

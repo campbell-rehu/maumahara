@@ -31,7 +31,7 @@ describe('WelcomeScreen', () => {
     expect(getByText('Maumahara')).toBeTruthy();
     
     // Check for description
-    expect(getByText('Match animals with their Te Reo Māori names')).toBeTruthy();
+    expect(getByText('Te Reo Māori Memory Match Game')).toBeTruthy();
     
     // Check for play button
     expect(getByText('Start')).toBeTruthy();
@@ -77,8 +77,10 @@ describe('WelcomeScreen', () => {
       fireEvent.press(easyButton);
     });
 
-    // Check navigation was called
-    expect(mockNavigate).toHaveBeenCalledWith('Game', { difficulty: 'easy' });
+    // Wait for navigation delay and check navigation was called
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith('Game', { difficulty: 'easy' });
+    }, { timeout: 500 });
   });
 
   it('navigates to game screen with medium difficulty', async () => {
@@ -98,8 +100,10 @@ describe('WelcomeScreen', () => {
       fireEvent.press(mediumButton);
     });
 
-    // Check navigation was called
-    expect(mockNavigate).toHaveBeenCalledWith('Game', { difficulty: 'medium' });
+    // Wait for navigation delay and check navigation was called
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith('Game', { difficulty: 'medium' });
+    }, { timeout: 500 });
   });
 
   it('navigates to game screen with hard difficulty', async () => {
@@ -119,8 +123,10 @@ describe('WelcomeScreen', () => {
       fireEvent.press(hardButton);
     });
 
-    // Check navigation was called
-    expect(mockNavigate).toHaveBeenCalledWith('Game', { difficulty: 'hard' });
+    // Wait for navigation delay and check navigation was called
+    await waitFor(() => {
+      expect(mockNavigate).toHaveBeenCalledWith('Game', { difficulty: 'hard' });
+    }, { timeout: 500 });
   });
 
   it('closes difficulty modal when cancel is pressed', async () => {
