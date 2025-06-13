@@ -31,7 +31,7 @@ jobs:
         fi
         
     - name: Expo Doctor Check
-      run: npx expo doctor
+      run: npx expo-doctor
       
     - name: Expo Prebuild (iOS)
       run: |
