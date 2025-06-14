@@ -1,5 +1,9 @@
 # Maumahara
 
+<p align="center">
+  <img src="./maumahara-app-icon.png" alt="Maumahara App Icon" width="128" height="128">
+</p>
+
 An iOS memory match game that teaches Te Reo Māori animal names to children (ages 5-12) through engaging card-matching gameplay.
 
 ![Maumahara Game Demo](./gameplay-demo.gif)
