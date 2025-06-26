@@ -38,12 +38,12 @@ Implement bilingual text display on cards with proper typography and cultural em
 - Verify readability on all card backgrounds
 
 ## Acceptance Criteria
-- [ ] All Te Reo Māori names display correctly with macrons
-- [ ] Text hierarchy emphasizes Te Reo Māori
-- [ ] Font is readable for children
-- [ ] Text doesn't overlap with images
-- [ ] Consistent styling across all cards
-- [ ] No spelling errors (double-check against PRD)
+- [x] All Te Reo Māori names display correctly with macrons
+- [x] Text hierarchy emphasizes Te Reo Māori
+- [x] Font is readable for children
+- [x] Text doesn't overlap with images
+- [x] Consistent styling across all cards
+- [x] No spelling errors (double-check against PRD)
 
 ## Cultural Validation
 - [ ] Te Reo Māori spelling verified

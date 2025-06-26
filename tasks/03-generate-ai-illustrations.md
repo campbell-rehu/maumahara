@@ -34,12 +34,12 @@ realistic animal colors appropriate for the species"
 5. Export as PNG with transparent backgrounds at 1024x1024
 
 ## Acceptance Criteria
-- [ ] All 10 animals generated with consistent style
-- [ ] Flat design aesthetic maintained across all illustrations
-- [ ] Earth tone color palette used appropriately
-- [ ] Māori-inspired patterns are subtle and respectful
-- [ ] All images exported as PNG with transparent backgrounds
-- [ ] Images saved in assets/images/animals/ directory
+- [x] All 10 animals generated with consistent style
+- [x] Flat design aesthetic maintained across all illustrations
+- [x] Earth tone color palette used appropriately
+- [x] Māori-inspired patterns are subtle and respectful
+- [x] All images exported as PNG with transparent backgrounds
+- [x] Images saved in assets/images/animals/ directory
 
 ## Quality Checklist
 - [ ] Animals are easily recognizable by children
