@@ -16,5 +16,5 @@ export const ANIMALS: Animal[] = [
   { id: '8', english: 'Pukeko', maori: 'Pūkeko', image: 'pukeko' },
   { id: '9', english: 'Tui', maori: 'Tūī', image: 'tui' },
   { id: '10', english: 'Butterfly', maori: 'Pūrerehua', image: 'butterfly' },
-  { id: '11', english: 'Snail', maori: 'Pupu', image: 'snail' },
+  { id: '11', english: 'Snail', maori: 'Pūpū', image: 'snail' },
 ];

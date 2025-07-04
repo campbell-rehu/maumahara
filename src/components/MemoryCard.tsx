@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useMemo, useCallback } from 'react';
 import {
   View,
   Text,
@@ -35,26 +35,27 @@ interface MemoryCardProps {
   selectionOrder?: 'first' | 'second' | null;
 }
 
-// Function to get the image source from assets
-const getImageSource = (imageName: string): ImageSourcePropType => {
-  const imageMap: Record<string, ImageSourcePropType> = {
-    butterfly: require('../../assets/images/animals/butterfly.png'),
-    cat: require('../../assets/images/animals/cat.png'),
-    cow: require('../../assets/images/animals/cow.png'),
-    dog: require('../../assets/images/animals/dog.png'),
-    horse: require('../../assets/images/animals/horse.png'),
-    kiwi: require('../../assets/images/animals/kiwi.png'),
-    pig: require('../../assets/images/animals/pig.png'),
-    pukeko: require('../../assets/images/animals/pukeko.png'),
-    sheep: require('../../assets/images/animals/sheep.png'),
-    snail: require('../../assets/images/animals/snail.png'),
-    tui: require('../../assets/images/animals/tui.png'),
-  };
-  
-  return imageMap[imageName] || imageMap.dog; // fallback to dog image
+// Move image map outside component to avoid recreation on every render
+const IMAGE_MAP: Record<string, ImageSourcePropType> = {
+  butterfly: require('../../assets/images/animals/butterfly.png'),
+  cat: require('../../assets/images/animals/cat.png'),
+  cow: require('../../assets/images/animals/cow.png'),
+  dog: require('../../assets/images/animals/dog.png'),
+  horse: require('../../assets/images/animals/horse.png'),
+  kiwi: require('../../assets/images/animals/kiwi.png'),
+  pig: require('../../assets/images/animals/pig.png'),
+  pukeko: require('../../assets/images/animals/pukeko.png'),
+  sheep: require('../../assets/images/animals/sheep.png'),
+  snail: require('../../assets/images/animals/snail.png'),
+  tui: require('../../assets/images/animals/tui.png'),
 };
 
-export default function MemoryCard({
+// Function to get the image source from assets
+const getImageSource = (imageName: string): ImageSourcePropType => {
+  return IMAGE_MAP[imageName] || IMAGE_MAP.dog; // fallback to dog image
+};
+
+function MemoryCard({
   cardId,
   animal,
   isFlipped,
@@ -75,8 +76,8 @@ export default function MemoryCard({
     });
   }, [isFlipped, flipAnimation]);
 
-  // Handle press with scale animation
-  const handlePress = () => {
+  // Handle press with scale animation - memoize to prevent recreation
+  const handlePress = useCallback(() => {
     if (disabled) return;
     
     scaleAnimation.value = withTiming(0.95, { duration: 100 }, () => {
@@ -85,7 +86,7 @@ export default function MemoryCard({
     
     // Run the onPress callback on the JS thread
     runOnJS(onPress)();
-  };
+  }, [disabled, scaleAnimation, onPress]);
 
   // Animated styles for the card container
   const cardContainerStyle = useAnimatedStyle(() => {
@@ -124,7 +125,8 @@ export default function MemoryCard({
     };
   });
 
-  const getBorderStyle = () => {
+  // Memoize border style to prevent recreation on every render
+  const borderStyle = useMemo(() => {
     if (isMatched) {
       return {}; // No border needed, gradient will be applied
     }
@@ -135,16 +137,26 @@ export default function MemoryCard({
       return { borderColor: COLORS.secondSelection, borderWidth: 4 };
     }
     return {};
-  };
+  }, [isMatched, isFlipped, selectionOrder]);
 
-  const cardStyle = [
+  // Memoize card style to prevent recreation
+  const cardStyle = useMemo(() => [
     styles.card,
     {
       width: cardWidth - 8,
       height: cardHeight - 8,
     },
-    getBorderStyle(),
-  ];
+    borderStyle,
+  ], [cardWidth, cardHeight, borderStyle]);
+
+  // Memoize image source to prevent recreation
+  const imageSource = useMemo(() => getImageSource(animal.image), [animal.image]);
+
+  // Memoize image dimensions
+  const imageDimensions = useMemo(() => ({
+    width: (cardWidth - 8) * 0.9,
+    height: (cardHeight - 8) * 0.9,
+  }), [cardWidth, cardHeight]);
 
   return (
     <AnimationErrorBoundary>
@@ -198,13 +210,10 @@ export default function MemoryCard({
                 {/* Animal Image - now takes up most of the card */}
                 <View style={styles.imageContainer}>
                   <Image
-                    source={getImageSource(animal.image)}
+                    source={imageSource}
                     style={[
                       styles.animalImage,
-                      {
-                        width: (cardWidth - 8) * 0.9,
-                        height: (cardHeight - 8) * 0.9,
-                      },
+                      imageDimensions,
                     ]}
                     resizeMode="contain"
                   />
@@ -270,4 +279,19 @@ const styles = StyleSheet.create({
     color: COLORS.textLight,
     textAlign: 'center',
   },
+});
+
+// Export with React.memo for performance optimization
+export default React.memo(MemoryCard, (prevProps, nextProps) => {
+  // Custom comparison to prevent unnecessary re-renders
+  return (
+    prevProps.cardId === nextProps.cardId &&
+    prevProps.isFlipped === nextProps.isFlipped &&
+    prevProps.isMatched === nextProps.isMatched &&
+    prevProps.cardWidth === nextProps.cardWidth &&
+    prevProps.cardHeight === nextProps.cardHeight &&
+    prevProps.disabled === nextProps.disabled &&
+    prevProps.selectionOrder === nextProps.selectionOrder &&
+    prevProps.animal.image === nextProps.animal.image
+  );
 });

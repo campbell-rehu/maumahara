@@ -138,8 +138,8 @@ export default function GameBoard({
     );
   };
 
-  // Render card
-  const renderCard = (card: any) => {
+  // Render card - memoized to prevent recreation on every render
+  const renderCard = useCallback((card: any) => {
     const isFlipped =
       gameState.flippedCards.includes(card.id) ||
       gameState.matchedCards.includes(card.id);
@@ -167,7 +167,16 @@ export default function GameBoard({
         selectionOrder={selectionOrder}
       />
     );
-  };
+  }, [
+    gameState.flippedCards,
+    gameState.matchedCards,
+    gameState.firstSelection,
+    gameState.secondSelection,
+    gameState.isProcessing,
+    cardDimensions.width,
+    cardDimensions.height,
+    onCardPress,
+  ]);
 
   return (
     <View style={styles.container}>
